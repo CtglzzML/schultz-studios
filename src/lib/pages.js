@@ -225,9 +225,11 @@ const renderAbout = () => {
       </div>
       <div class="founders-grid">
         ${founders
-          .map(
-            (founder) => `
-              <article class="founder-card founder-card-${founder.name.toLowerCase()} section-frame" data-reveal>
+          .map((founder, index) => {
+            const reverseClass = index % 2 === 1 ? " founder-card-reverse" : "";
+
+            return `
+              <article class="founder-card founder-card-${founder.name.toLowerCase()}${reverseClass}" data-reveal>
                 <div class="founder-image-wrap">
                   <img class="founder-image founder-image-${founder.name.toLowerCase()}" src="${founder.image}" alt="${founder.alt}" />
                 </div>
@@ -246,8 +248,8 @@ const renderAbout = () => {
                   </div>
                 </div>
               </article>
-            `
-          )
+            `;
+          })
           .join("")}
       </div>
     </section>
@@ -419,10 +421,10 @@ const renderBlog = () => {
 const renderContact = () => {
   const hero = renderPageHero({
     eyebrow: "Contact",
-    title: "Open, simple, and easy to begin.",
-    lead: contactPrompt,
+    title: "Open a draft and say hello.",
+    lead: "No form to fill twice. Just open the draft, write a few lines, and send it our way.",
     aside:
-      "This can be a project, a thought, or something you are still trying to understand. A few honest lines are enough."
+      "Projects, ideas, and half-formed thoughts are all welcome. Keep it simple. That is usually enough."
   });
 
   const content = `
@@ -442,30 +444,15 @@ const renderContact = () => {
             )
             .join("")}
         </div>
-      </div>
-
-      <form class="contact-form" data-contact-form data-email="${studio.email}" data-reveal>
-        <label>
-          Name
-          <input type="text" name="name" placeholder="Your name" required />
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" placeholder="you@example.com" required />
-        </label>
-        <label>
-          Project
-          <input type="text" name="project" placeholder="Website, product, idea, or something still forming..." />
-        </label>
-        <label>
-          Note
-          <textarea name="message" rows="6" placeholder="A few thoughtful lines are enough." required></textarea>
-        </label>
-        <button class="button button-primary" type="submit">Draft the email</button>
-        <p class="form-note" data-form-status>
-          This opens your mail app with a prefilled draft. Simple for now, and enough to start.
+        <a class="button button-primary contact-button" href="mailto:${studio.email}?subject=${encodeURIComponent(
+          "Schultz' Studios"
+        )}">
+          Open email draft
+        </a>
+        <p class="form-note">
+          Or write directly to <a href="mailto:${studio.email}">${studio.email}</a>.
         </p>
-      </form>
+      </div>
     </section>
   `;
 

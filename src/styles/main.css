@@ -44,9 +44,10 @@ body {
 
 body[data-page="lab"] {
   background:
-    radial-gradient(circle at 18% 12%, rgba(255, 54, 54, 0.2), transparent 24%),
-    radial-gradient(circle at 82% 20%, rgba(255, 92, 92, 0.12), transparent 20%),
-    linear-gradient(180deg, #090405 0%, #100607 38%, #120404 100%);
+    radial-gradient(circle at 18% 12%, rgba(255, 54, 54, 0.1), transparent 24%),
+    radial-gradient(circle at 82% 20%, rgba(255, 92, 92, 0.06), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(255, 44, 44, 0.08), transparent 28%),
+    linear-gradient(180deg, #040507 0%, #07090c 34%, #050608 100%);
 }
 
 body::before,
@@ -165,15 +166,17 @@ body[data-page="lab"] .site-header {
 
 body[data-page="lab"] .header-inner {
   padding: 14px 18px;
-  border-radius: 24px;
-  border-color: rgba(255, 86, 86, 0.28);
+  border-radius: 18px;
+  border-color: rgba(255, 86, 86, 0.16);
   background:
-    linear-gradient(180deg, rgba(86, 10, 14, 0.88), rgba(27, 8, 10, 0.96)),
-    rgba(24, 7, 8, 0.96);
+    linear-gradient(180deg, rgba(12, 13, 18, 0.94), rgba(8, 9, 13, 0.98)),
+    rgba(9, 10, 14, 0.98);
   box-shadow:
-    inset 0 1px 0 rgba(255, 184, 184, 0.06),
-    0 18px 46px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(255, 56, 56, 0.08);
+    inset 0 1px 0 rgba(255, 196, 196, 0.04),
+    inset 0 -1px 0 rgba(255, 68, 68, 0.06),
+    0 18px 46px rgba(0, 0, 0, 0.36),
+    0 0 0 1px rgba(255, 56, 56, 0.06),
+    0 0 26px rgba(255, 32, 32, 0.06);
 }
 
 body[data-page="lab"] .brand-name {
@@ -181,15 +184,15 @@ body[data-page="lab"] .brand-name {
 }
 
 body[data-page="lab"] .brand-meta {
-  color: rgba(255, 161, 161, 0.64);
+  color: rgba(255, 161, 161, 0.46);
 }
 
 body[data-page="lab"] .brand-mark {
-  border-color: rgba(255, 110, 110, 0.18);
+  border-color: rgba(255, 110, 110, 0.1);
   box-shadow:
-    inset 1px 1px 2px rgba(255, 255, 255, 0.12),
-    inset -2px -2px 4px rgba(47, 0, 0, 0.3),
-    0 0 18px rgba(255, 82, 82, 0.12);
+    inset 1px 1px 2px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 4px rgba(47, 0, 0, 0.18),
+    0 0 14px rgba(255, 82, 82, 0.06);
 }
 
 body[data-page="lab"] .site-nav {
@@ -197,9 +200,9 @@ body[data-page="lab"] .site-nav {
 }
 
 body[data-page="lab"] .nav-link {
-  color: rgba(255, 194, 194, 0.68);
-  border: 1px solid transparent;
-  border-radius: 14px;
+  color: rgba(255, 224, 224, 0.72);
+  border: 1px solid rgba(255, 72, 72, 0.06);
+  border-radius: 10px;
 }
 
 body[data-page="lab"] .nav-link::after {
@@ -213,8 +216,8 @@ body[data-page="lab"] .nav-link:hover,
 body[data-page="lab"] .nav-link:focus-visible,
 body[data-page="lab"] .nav-link.is-active {
   color: #fff1f1;
-  background: rgba(255, 66, 66, 0.12);
-  border-color: rgba(255, 94, 94, 0.2);
+  background: rgba(255, 54, 54, 0.08);
+  border-color: rgba(255, 94, 94, 0.16);
 }
 
 .brand {
@@ -964,48 +967,66 @@ body[data-page="lab"] .nav-link.is-active {
 
 .founders-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 2rem;
   padding-inline: var(--content-gutter);
 }
 
 .founder-card {
   display: grid;
-  gap: 14px;
-  align-items: start;
-  padding: 14px;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.8rem);
+  align-items: center;
+  padding: 0;
+}
+
+.founder-card-reverse {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.82fr);
+}
+
+.founder-card-reverse .founder-image-wrap {
+  order: 2;
+}
+
+.founder-card-reverse .founder-copy {
+  order: 1;
 }
 
 .founder-image-wrap {
   position: relative;
-  height: 280px;
-  border-radius: 16px;
+  height: clamp(320px, 34vw, 420px);
+  border-radius: 26px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
     rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
 }
 
 .founder-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
+}
+
+.founder-image-sara {
+  object-position: center 12%;
+}
+
+.founder-image-carlos {
+  object-position: center 20%;
 }
 
 .founder-copy {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   align-content: start;
-  grid-template-rows: auto auto auto 1fr;
+  padding: 0.35rem 0;
 }
 
 .founder-role {
   display: block;
-  min-height: 2.4em;
   color: var(--text-faint);
   font-size: 0.68rem;
   line-height: 1.2;
@@ -1015,7 +1036,7 @@ body[data-page="lab"] .nav-link.is-active {
 
 .founder-copy h3 {
   margin: 0;
-  font-size: clamp(1.15rem, 1.55vw, 1.45rem);
+  font-size: clamp(1.55rem, 2vw, 2rem);
   font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -1024,24 +1045,26 @@ body[data-page="lab"] .nav-link.is-active {
 .founder-copy p {
   margin: 0;
   color: var(--text-soft);
-  font-size: 0.9rem;
-  line-height: 1.6;
+  max-width: 34rem;
+  font-size: 0.98rem;
+  line-height: 1.72;
 }
 
 .founder-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px 8px;
+  margin-top: 4px;
 }
 
 .founder-tags span {
   display: inline-flex;
-  padding: 4px 8px;
+  padding: 5px 9px;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.03);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
 }
 
 .lab-shell {
@@ -1216,16 +1239,17 @@ body[data-page="lab"] .nav-link.is-active {
 }
 
 .page-lab {
-  --lab-red: #ff4343;
-  --lab-red-soft: rgba(255, 67, 67, 0.24);
-  --lab-red-line: rgba(255, 92, 92, 0.36);
-  --lab-red-glow: rgba(255, 67, 67, 0.32);
+  --lab-red: #ff4b4b;
+  --lab-red-soft: rgba(255, 75, 75, 0.18);
+  --lab-red-line: rgba(255, 92, 92, 0.24);
+  --lab-red-glow: rgba(255, 62, 62, 0.2);
 }
 
 .page-lab .page-hero {
   position: relative;
-  padding-top: clamp(1.9rem, 4.4vw, 3rem);
-  padding-bottom: clamp(1.8rem, 4vw, 2.6rem);
+  padding-inline: var(--content-gutter);
+  padding-top: clamp(2rem, 4.6vw, 3.2rem);
+  padding-bottom: clamp(2rem, 4.4vw, 3rem);
 }
 
 .page-lab .page-hero::before {
@@ -1234,20 +1258,21 @@ body[data-page="lab"] .nav-link.is-active {
   inset: 0;
   border-radius: 32px;
   background:
-    radial-gradient(circle at 18% 22%, rgba(255, 88, 88, 0.18), transparent 24%),
-    linear-gradient(90deg, rgba(255, 52, 52, 0.14), transparent 28%),
-    linear-gradient(180deg, rgba(255, 52, 52, 0.1), transparent 56%);
+    radial-gradient(circle at 14% 20%, rgba(255, 88, 88, 0.06), transparent 24%),
+    radial-gradient(circle at 76% 34%, rgba(255, 48, 48, 0.04), transparent 28%),
+    linear-gradient(90deg, rgba(255, 52, 52, 0.06), transparent 32%),
+    linear-gradient(180deg, rgba(255, 52, 52, 0.04), transparent 56%);
   pointer-events: none;
 }
 
 .page-lab .page-hero::after {
   content: "";
   position: absolute;
-  left: 24px;
-  right: 24px;
+  left: 0;
+  right: 0;
   bottom: 0;
   height: 1px;
-  background: linear-gradient(90deg, rgba(255, 102, 102, 0.5), rgba(255, 102, 102, 0));
+  background: linear-gradient(90deg, rgba(255, 102, 102, 0.2), rgba(255, 102, 102, 0));
   pointer-events: none;
 }
 
@@ -1279,25 +1304,25 @@ body[data-page="lab"] .nav-link.is-active {
 }
 
 .page-lab .page-aside strong {
-  color: #ffd3d9;
+  color: #ffe6e6;
 }
 
 .page-lab .section-frame,
 .page-lab .lab-preview {
   border-color: var(--lab-red-line);
   background:
-    linear-gradient(180deg, rgba(255, 72, 72, 0.16), rgba(255, 255, 255, 0.01) 20%),
-    linear-gradient(180deg, rgba(72, 8, 8, 0.4), transparent 42%),
-    rgba(15, 8, 10, 0.9);
+    linear-gradient(180deg, rgba(12, 13, 18, 0.94), rgba(8, 9, 13, 0.98)),
+    rgba(9, 10, 14, 0.98);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.03),
-    0 24px 60px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(255, 82, 82, 0.08),
-    0 0 40px rgba(255, 42, 42, 0.12);
+    inset 0 -1px 0 rgba(255, 58, 58, 0.05),
+    0 24px 60px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 82, 82, 0.06),
+    0 0 34px rgba(255, 42, 42, 0.08);
 }
 
 .page-lab .lab-preview {
-  padding: 20px 20px 22px;
+  padding: 12px 12px 14px;
 }
 
 .page-lab .lab-preview .section-kicker {
@@ -1311,8 +1336,8 @@ body[data-page="lab"] .nav-link.is-active {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255, 92, 92, 0.95);
-  box-shadow: 0 0 18px rgba(255, 64, 64, 0.36);
+  background: rgba(255, 92, 92, 0.8);
+  box-shadow: 0 0 14px rgba(255, 64, 64, 0.18);
 }
 
 .page-lab .lab-preview::after {
@@ -1332,8 +1357,8 @@ body[data-page="lab"] .nav-link.is-active {
 .page-lab .lab-preview-meta span,
 .page-lab .lab-tag-list span {
   border-color: var(--lab-red-line);
-  background: rgba(218, 61, 79, 0.14);
-  color: rgba(255, 223, 228, 0.94);
+  background: rgba(14, 16, 21, 0.92);
+  color: rgba(255, 223, 228, 0.88);
 }
 
 .page-lab .lab-row {
@@ -1360,7 +1385,7 @@ body[data-page="lab"] .nav-link.is-active {
 .page-lab .lab-row:hover,
 .page-lab .lab-row:focus-visible,
 .page-lab .lab-row.is-active {
-  background: linear-gradient(90deg, rgba(218, 61, 79, 0.14), rgba(218, 61, 79, 0));
+  background: linear-gradient(90deg, rgba(255, 75, 75, 0.05), rgba(255, 75, 75, 0));
   transform: translateX(8px);
 }
 
@@ -1368,8 +1393,8 @@ body[data-page="lab"] .nav-link.is-active {
 .page-lab .lab-row:focus-visible::before,
 .page-lab .lab-row.is-active::before {
   width: 3px;
-  background: rgba(255, 136, 150, 0.96);
-  box-shadow: 0 0 16px rgba(218, 61, 79, 0.38);
+  background: rgba(255, 136, 150, 0.84);
+  box-shadow: 0 0 12px rgba(218, 61, 79, 0.2);
 }
 
 .page-lab .lab-row.is-active strong {
@@ -1403,8 +1428,8 @@ body[data-page="lab"] .nav-link.is-active {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(255, 136, 150, 0.9);
-  box-shadow: 0 0 14px rgba(218, 61, 79, 0.34);
+  background: rgba(255, 136, 150, 0.76);
+  box-shadow: 0 0 10px rgba(218, 61, 79, 0.16);
   transform: translateY(-50%);
 }
 
@@ -1431,9 +1456,19 @@ body[data-page="lab"] .nav-link.is-active {
   align-items: start;
 }
 
+.page-contact .contact-shell {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 44rem;
+}
+
 .contact-note,
 .contact-form {
   padding: clamp(1.3rem, 3vw, 2rem);
+}
+
+.page-contact .contact-note {
+  display: grid;
+  gap: 14px;
 }
 
 .contact-detail-list {
@@ -1454,6 +1489,18 @@ body[data-page="lab"] .nav-link.is-active {
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.contact-button {
+  justify-self: start;
+  margin-top: 8px;
+}
+
+.form-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
 .contact-form {
@@ -1637,8 +1684,9 @@ body[data-page="lab"] .nav-link.is-active {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .founder-card {
-    grid-template-columns: 160px minmax(0, 1fr);
+  .founder-card,
+  .founder-card-reverse {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1fr);
   }
 
   .door-arrow,
@@ -1714,12 +1762,19 @@ body[data-page="lab"] .nav-link.is-active {
     grid-template-columns: 1fr;
   }
 
-  .founder-card {
+  .founder-card,
+  .founder-card-reverse {
     grid-template-columns: 1fr;
+  }
+
+  .founder-card-reverse .founder-image-wrap,
+  .founder-card-reverse .founder-copy {
+    order: initial;
   }
 
   .founder-image-wrap {
     aspect-ratio: 4 / 3.9;
+    height: auto;
   }
 }
 

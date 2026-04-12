@@ -6,9 +6,9 @@ export const studio = {
   description:
     "Schultz' Studios is where the work lives. Schultz' Lab is where things are tried, built, tested, and kept in motion.",
   shortDescription:
-    "A small studio named after Schultz' Gate, the first home we shared in Norway.",
+    "From our small studio, to the world.",
   location: "Norway / Remote",
-  email: "hello@schultzstudios.studio",
+  email: "sbhereda@gmail.com",
   availability: "Open to conversations, shared ideas, and thoughtful work."
 };
 
@@ -59,7 +59,7 @@ export const homeDoors = [
 export const homeSignals = [
   "We don't rush the work. We give it the time it needs.",
   "Nothing goes out until it feels right.",
-  "We only build what fits the life we want to live."
+  "We make things with love."
 ];
 
 export const labEntries = [
