@@ -1,66 +1,282 @@
+export const defaultLanguage = "en";
+export const supportedLanguages = ["en", "es"];
+export const languageStorageKey = "schultz-language";
+
+const isPlainObject = (value) =>
+  Boolean(value) && typeof value === "object" && !Array.isArray(value);
+
+const mergeLocalizedContent = (base, override) => {
+  if (override === undefined) {
+    return base;
+  }
+
+  if (Array.isArray(base) && Array.isArray(override)) {
+    const maxLength = Math.max(base.length, override.length);
+
+    return Array.from({ length: maxLength }, (_, index) =>
+      mergeLocalizedContent(base[index], override[index])
+    );
+  }
+
+  if (Array.isArray(base) || Array.isArray(override)) {
+    return override ?? base;
+  }
+
+  if (isPlainObject(base) && isPlainObject(override)) {
+    const keys = new Set([...Object.keys(base), ...Object.keys(override)]);
+
+    return Object.fromEntries(
+      [...keys].map((key) => [key, mergeLocalizedContent(base?.[key], override?.[key])])
+    );
+  }
+
+  return override ?? base;
+};
+
+export const resolveContentLanguage = (language = defaultLanguage) => {
+  const normalizedLanguage = String(language ?? defaultLanguage)
+    .toLowerCase()
+    .split("-")[0];
+
+  return supportedLanguages.includes(normalizedLanguage)
+    ? normalizedLanguage
+    : defaultLanguage;
+};
+
+// Shared copy can grow here section by section as more pages become bilingual.
+export const localizedSharedContent = {
+  en: {
+    studioMeta: {
+      strapline: "A small digital studio making websites and products with care.",
+      description:
+        "Schultz' Studios is where the work lives. Schultz' Lab is where things are tried, built, tested, and kept in motion.",
+      shortDescription: "From our small studio, to the world.",
+      location: "Norway / Remote",
+      availability: "Open to conversations, shared ideas, and thoughtful work."
+    },
+    navigation: [
+      { label: "Home", href: "/" },
+      { label: "About Us", href: "/about.html" },
+      { label: "Lab", href: "/lab.html" },
+      { label: "Blog", href: "/blog.html" },
+      { label: "Contact", href: "/contact.html" }
+    ],
+    homeHero: {
+      eyebrow: "Schultz' Studios",
+      title: "This is what we stand <em>for.</em>",
+      lead:
+        "We create websites, interfaces, and visual systems shaped by detail and built to last.",
+      aside: [
+        "<strong>Schultz' Studios</strong> is where you get to know us, our thinking, and the world around our work.",
+        "<strong>Schultz' Lab</strong> is our working space: a place for ideas taking shape, early builds, works in progress, and finished projects."
+      ],
+      markers: ["Websites", "Portfolios", "Web apps", "AI solutions", "Human-made"]
+    },
+    homeDoors: [
+      {
+        label: "About Us",
+        title: "Who we are, and how we work.",
+        text:
+          "A small studio shaped by two different backgrounds, one shared standard, and a quieter way of building.",
+        href: "/about.html"
+      },
+      {
+        label: "Schultz' Lab",
+        title: "Builds in progress, ideas in motion.",
+        text:
+          "An internal space for things we are making, testing, refining, and keeping alive while they are still unfinished.",
+        href: "/lab.html"
+      },
+      {
+        label: "Blog",
+        title: "A quiet journal, slowly taking shape.",
+        text:
+          "Notes, process, reflections, and small pieces of writing will live here when they are ready.",
+        href: "/blog.html"
+      }
+    ],
+    homeSignals: [
+      "We don't rush the work. We give it the time it needs.",
+      "Nothing goes out until it feels right.",
+      "We make things with love."
+    ],
+    homePage: {
+      links: {
+        enterLab: "Enter the Lab",
+        readBlog: "Read the blog",
+        open: "Open",
+        getInTouch: "Get in touch"
+      },
+      signals: {
+        title: "What guides the work."
+      },
+      lab: {
+        kicker: "From the Lab",
+        title: "Things we are making while they are still in motion.",
+        entries: [
+          {
+            id: "01",
+            name: "Truffle",
+            short:
+              "A calm place to keep everything related to your pet in one space, from papers and routines to the details you do not want to lose track of.",
+            state: "In progress"
+          },
+          {
+            id: "02",
+            name: "Aware",
+            short:
+              "A web app for keeping track of spending around any event, so the money side stays visible while everything else is moving.",
+            state: "In progress"
+          }
+        ]
+      },
+      blog: {
+        kicker: "Blog",
+        title: "A journal that will grow in its own time.",
+        body:
+          "Writing will live here when it has something real to say. Until then, we would rather leave the space quiet."
+      },
+      contact: {
+        kicker: "Contact",
+        title:
+          "If something is taking shape and you want to talk it through, our door is open."
+      }
+    }
+  },
+  es: {
+    studioMeta: {
+      strapline:
+        "Un pequeno estudio digital que crea sitios web y productos con cuidado.",
+      description:
+        "Schultz' Studios es donde vive el trabajo. Schultz' Lab es donde las cosas se prueban, se construyen, se afinan y siguen en movimiento.",
+      shortDescription: "Desde nuestro pequeno estudio, hacia el mundo.",
+      location: "Noruega / Remoto",
+      availability:
+        "Abiertos a conversaciones, ideas compartidas y trabajo hecho con criterio."
+    },
+    navigation: [
+      { label: "Inicio", href: "/" },
+      { label: "Sobre nosotros", href: "/about.html" },
+      { label: "Lab", href: "/lab.html" },
+      { label: "Blog", href: "/blog.html" },
+      { label: "Contacto", href: "/contact.html" }
+    ],
+    homeHero: {
+      eyebrow: "Schultz' Studios",
+      title: "Esto es lo que <em>defendemos.</em>",
+      lead:
+        "Creamos sitios web, interfaces y sistemas visuales definidos por el detalle y pensados para perdurar.",
+      aside: [
+        "<strong>Schultz' Studios</strong> es donde puedes conocernos, entender nuestra forma de pensar y entrar en el mundo que rodea nuestro trabajo.",
+        "<strong>Schultz' Lab</strong> es nuestro espacio de trabajo: un lugar para ideas que toman forma, primeros desarrollos, proyectos en marcha y proyectos terminados."
+      ],
+      markers: ["Sitios web", "Portafolios", "Apps web", "Soluciones de IA", "Hecho por humanos"]
+    },
+    homeDoors: [
+      {
+        label: "Sobre nosotros",
+        title: "Quienes somos y como trabajamos.",
+        text:
+          "Un estudio pequeno formado por dos trayectorias distintas, un estandar compartido y una manera mas silenciosa de construir.",
+        href: "/about.html"
+      },
+      {
+        label: "Schultz' Lab",
+        title: "Proyectos en marcha, ideas en movimiento.",
+        text:
+          "Un espacio interno para lo que estamos creando, probando, refinando y manteniendo vivo mientras todavia no esta terminado.",
+        href: "/lab.html"
+      },
+      {
+        label: "Blog",
+        title: "Un diario silencioso, tomando forma poco a poco.",
+        text:
+          "Aqui viviran notas, proceso, reflexiones y pequenos textos cuando esten listos.",
+        href: "/blog.html"
+      }
+    ],
+    homeSignals: [
+      "No apresuramos el trabajo. Le damos el tiempo que necesita.",
+      "Nada sale hasta que se siente bien.",
+      "Hacemos las cosas con amor."
+    ],
+    homePage: {
+      links: {
+        enterLab: "Entrar al Lab",
+        readBlog: "Leer el blog",
+        open: "Abrir",
+        getInTouch: "Ponte en contacto"
+      },
+      signals: {
+        title: "Lo que guia el trabajo."
+      },
+      lab: {
+        kicker: "Desde el Lab",
+        title: "Cosas que estamos creando mientras siguen en movimiento.",
+        entries: [
+          {
+            id: "01",
+            name: "Truffle",
+            short:
+              "Un lugar sereno para guardar todo lo relacionado con tu mascota en un solo espacio, desde papeles y rutinas hasta los detalles que no quieres perder de vista.",
+            state: "En progreso"
+          },
+          {
+            id: "02",
+            name: "Aware",
+            short:
+              "Una app web para seguir los gastos de cualquier evento, de modo que la parte economica siga visible mientras todo lo demas esta en movimiento.",
+            state: "En progreso"
+          }
+        ]
+      },
+      blog: {
+        kicker: "Blog",
+        title: "Un diario que crecera a su propio ritmo.",
+        body:
+          "La escritura vivira aqui cuando tenga algo real que decir. Hasta entonces, preferimos dejar el espacio en silencio."
+      },
+      contact: {
+        kicker: "Contacto",
+        title:
+          "Si algo esta tomando forma y quieres hablarlo con nosotros, nuestra puerta esta abierta."
+      }
+    }
+  }
+};
+
+export const getSharedContent = (language = defaultLanguage) => {
+  const resolvedLanguage = resolveContentLanguage(language);
+
+  return mergeLocalizedContent(
+    localizedSharedContent[defaultLanguage],
+    localizedSharedContent[resolvedLanguage]
+  );
+};
+
+export const getSharedSection = (section, language = defaultLanguage) =>
+  getSharedContent(language)[section];
+
 export const studio = {
   name: "Schultz' Studios",
   labName: "Schultz' Lab",
-  strapline:
-    "A small digital studio making websites and products with care.",
-  description:
-    "Schultz' Studios is where the work lives. Schultz' Lab is where things are tried, built, tested, and kept in motion.",
-  shortDescription:
-    "From our small studio, to the world.",
-  location: "Norway / Remote",
+  strapline: getSharedSection("studioMeta").strapline,
+  description: getSharedSection("studioMeta").description,
+  shortDescription: getSharedSection("studioMeta").shortDescription,
+  location: getSharedSection("studioMeta").location,
   email: "sbhereda@gmail.com",
-  availability: "Open to conversations, shared ideas, and thoughtful work."
+  availability: getSharedSection("studioMeta").availability
 };
 
-export const navigation = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about.html" },
-  { label: "Lab", href: "/lab.html" },
-  { label: "Blog", href: "/blog.html" },
-  { label: "Contact", href: "/contact.html" }
-];
+export const navigation = getSharedSection("navigation");
 
-export const homeHero = {
-  eyebrow: "Schultz' Studios",
-  title: "This is what we stand <em>for.</em>",
-  lead:
-    "We craft ideas into digital realities, driven by a love for detail and a pursuit of perfection.",
-  aside: [
-    "<strong>Schultz' Studios</strong> is our base for the work we make and the things we keep building over time.",
-    "<strong>Schultz' Lab</strong> is the working space behind it: ideas in progress, early builds, and pieces that are still finding their final form."
-  ],
-  markers: ["Websites", "Portfolios", "Web apps", "AI solutions", "Human-made"]
-};
+export const homeHero = getSharedSection("homeHero");
 
-export const homeDoors = [
-  {
-    label: "About Us",
-    title: "Who we are, and how we work.",
-    text:
-      "A small studio shaped by two different backgrounds, one shared standard, and a quieter way of building.",
-    href: "/about.html"
-  },
-  {
-    label: "Schultz' Lab",
-    title: "Builds in progress, ideas in motion.",
-    text:
-      "An internal space for things we are making, testing, refining, and keeping alive while they are still unfinished.",
-    href: "/lab.html"
-  },
-  {
-    label: "Blog",
-    title: "A quiet journal, slowly taking shape.",
-    text:
-      "Notes, process, reflections, and small pieces of writing will live here when they are ready.",
-    href: "/blog.html"
-  }
-];
+export const homeDoors = getSharedSection("homeDoors");
 
-export const homeSignals = [
-  "We don't rush the work. We give it the time it needs.",
-  "Nothing goes out until it feels right.",
-  "We make things with love."
-];
+export const homeSignals = getSharedSection("homeSignals");
+
+export const homePage = getSharedSection("homePage");
 
 export const labEntries = [
   {
@@ -161,7 +377,7 @@ export const blogPlaceholder = {
   homeTitle: "A journal that will grow in its own time.",
   homeText:
     "Writing will live here when it has something real to say. Until then, we would rather leave the space quiet.",
-  cta: "Dive into the blog"
+  cta: "Read the blog"
 };
 
 export const blogEntries = [

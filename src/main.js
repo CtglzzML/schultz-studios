@@ -1,29 +1,48 @@
 import "./styles/main.css";
+import {
+  defaultLanguage,
+  languageStorageKey,
+  resolveContentLanguage
+} from "./content/site.js";
 import { setupFieldCanvas } from "./lib/field.js";
 import { articleDefinitions, pageDefinitions } from "./lib/pages.js";
 
 const app = document.querySelector("#app");
 const pageId = document.body.dataset.page ?? "home";
 const articleId = document.body.dataset.article ?? "";
-const currentPage =
+const descriptionTag = document.querySelector('meta[name="description"]');
+
+const getStoredLanguage = () => {
+  try {
+    return window.localStorage.getItem(languageStorageKey);
+  } catch {
+    return null;
+  }
+};
+
+const saveLanguagePreference = (language) => {
+  try {
+    window.localStorage.setItem(languageStorageKey, language);
+  } catch {
+    // Ignore storage failures so rendering keeps working.
+  }
+};
+
+const getPreferredLanguage = () =>
+  resolveContentLanguage(
+    getStoredLanguage() ?? document.documentElement.lang ?? defaultLanguage
+  );
+
+const setDocumentLanguage = (language) => {
+  document.documentElement.lang = resolveContentLanguage(language);
+};
+
+const getCurrentPage = () =>
   pageId === "article"
     ? articleDefinitions[articleId]
     : pageDefinitions[pageId] ?? pageDefinitions.home;
-const descriptionTag = document.querySelector('meta[name="description"]');
 
-if (!currentPage) {
-  throw new Error(`Unknown page configuration for "${pageId}"`);
-}
-
-document.title = currentPage.title;
-
-if (descriptionTag) {
-  descriptionTag.setAttribute("content", currentPage.description);
-}
-
-if (app) {
-  app.innerHTML = currentPage.render();
-}
+const resolvePageValue = (value) => (typeof value === "function" ? value() : value);
 
 const setupNav = () => {
   const navWrap = document.querySelector("[data-nav]");
@@ -42,6 +61,39 @@ const setupNav = () => {
     link.addEventListener("click", () => {
       navWrap.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
+    });
+  });
+};
+
+const setupLanguageSwitcher = (renderApp) => {
+  const switcher = document.querySelector("[data-language-switcher]");
+
+  if (!switcher) {
+    return;
+  }
+
+  const activeLanguage = resolveContentLanguage(document.documentElement.lang);
+  const options = Array.from(switcher.querySelectorAll("[data-language-option]"));
+
+  options.forEach((option) => {
+    if (!(option instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const optionLanguage = resolveContentLanguage(option.dataset.languageOption);
+    const isActive = optionLanguage === activeLanguage;
+
+    option.classList.toggle("is-active", isActive);
+    option.setAttribute("aria-pressed", String(isActive));
+
+    option.addEventListener("click", () => {
+      if (optionLanguage === resolveContentLanguage(document.documentElement.lang)) {
+        return;
+      }
+
+      saveLanguagePreference(optionLanguage);
+      setDocumentLanguage(optionLanguage);
+      renderApp();
     });
   });
 };
@@ -270,9 +322,32 @@ const setupCometButtons = () => {
   });
 };
 
-setupFieldCanvas();
-setupNav();
-setupReveals();
-setupContactForm();
-setupLabArchive();
-setupCometButtons();
+setDocumentLanguage(getPreferredLanguage());
+
+const renderApp = () => {
+  const currentPage = getCurrentPage();
+
+  if (!currentPage) {
+    throw new Error(`Unknown page configuration for "${pageId}"`);
+  }
+
+  document.title = resolvePageValue(currentPage.title);
+
+  if (descriptionTag) {
+    descriptionTag.setAttribute("content", resolvePageValue(currentPage.description));
+  }
+
+  if (app) {
+    app.innerHTML = currentPage.render();
+  }
+
+  setupFieldCanvas();
+  setupNav();
+  setupLanguageSwitcher(renderApp);
+  setupReveals();
+  setupContactForm();
+  setupLabArchive();
+  setupCometButtons();
+};
+
+renderApp();

@@ -1,7 +1,18 @@
-import { navigation, studio } from "../content/site.js";
+import {
+  defaultLanguage,
+  getSharedSection,
+  resolveContentLanguage,
+  supportedLanguages,
+  studio
+} from "../content/site.js";
 
-const renderNavLinks = (navPageId) =>
-  navigation
+const getCurrentLanguage = () =>
+  typeof document === "undefined"
+    ? defaultLanguage
+    : resolveContentLanguage(document.documentElement.lang);
+
+const renderNavLinks = (navPageId, language) =>
+  getSharedSection("navigation", language)
     .map(({ label, href }) => {
       const isActive =
         (navPageId === "home" && href === "/") ||
@@ -17,63 +28,89 @@ const renderNavLinks = (navPageId) =>
     })
     .join("");
 
+const renderLanguageSwitcher = (language) => `
+  <div class="language-switcher" data-language-switcher aria-label="Language switcher">
+    ${supportedLanguages
+      .map(
+        (code) => `
+          <button
+            class="language-option${code === language ? " is-active" : ""}"
+            type="button"
+            data-language-option="${code}"
+            aria-pressed="${String(code === language)}"
+          >
+            ${code.toUpperCase()}
+          </button>
+        `
+      )
+      .join("")}
+  </div>
+`;
+
 export const renderLayout = ({
   pageId,
   navPageId = pageId,
   hero,
   content,
   pageClass = ""
-}) => `
-  <div class="field-layer" aria-hidden="true">
-    <canvas class="field-canvas" data-field-canvas></canvas>
-  </div>
+}) => {
+  const language = getCurrentLanguage();
+  const studioMeta = getSharedSection("studioMeta", language);
 
-  <div class="ambient-layer" aria-hidden="true">
-    <span class="ambient ambient-a"></span>
-    <span class="ambient ambient-b"></span>
-  </div>
+  return `
+    <div class="field-layer" aria-hidden="true">
+      <canvas class="field-canvas" data-field-canvas></canvas>
+    </div>
 
-  <div class="site-shell ${pageClass}">
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="/" aria-label="${studio.name} home">
-          <span class="brand-mark">
-            <img src="/brand-planet.png" alt="" aria-hidden="true" />
-          </span>
-          <div class="brand-copy">
-            <span class="brand-name">${studio.name}</span>
-            <span class="brand-meta">${studio.location}</span>
+    <div class="ambient-layer" aria-hidden="true">
+      <span class="ambient ambient-a"></span>
+      <span class="ambient ambient-b"></span>
+    </div>
+
+    <div class="site-shell ${pageClass}">
+      <header class="site-header">
+        <div class="header-inner">
+          <a class="brand" href="/" aria-label="${studio.name} home">
+            <span class="brand-mark">
+              <img src="/brand-planet.png" alt="" aria-hidden="true" />
+            </span>
+            <div class="brand-copy">
+              <span class="brand-name">${studio.name}</span>
+              <span class="brand-meta">${studioMeta.location}</span>
+            </div>
+          </a>
+
+          <div class="nav-wrap" data-nav>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Open menu" data-nav-toggle>
+              <span></span>
+              <span></span>
+            </button>
+
+            <nav class="site-nav" aria-label="Main navigation">
+              ${renderNavLinks(navPageId, language)}
+            </nav>
+
+            ${renderLanguageSwitcher(language)}
           </div>
-        </a>
-
-        <div class="nav-wrap" data-nav>
-          <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Open menu" data-nav-toggle>
-            <span></span>
-            <span></span>
-          </button>
-
-          <nav class="site-nav" aria-label="Main navigation">
-            ${renderNavLinks(navPageId)}
-          </nav>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <main class="site-main page-${pageId}">
-      ${hero}
-      ${content}
-    </main>
+      <main class="site-main page-${pageId}">
+        ${hero}
+        ${content}
+      </main>
 
-    <footer class="site-footer">
-      <div class="footer-line">
-        <span>${studio.name}</span>
-        <span>${studio.labName}</span>
-        <span>${studio.location}</span>
-        <a href="mailto:${studio.email}">${studio.email}</a>
-      </div>
-      <div class="footer-line footer-muted">
-        <span>${studio.shortDescription}</span>
-      </div>
-    </footer>
-  </div>
-`;
+      <footer class="site-footer">
+        <div class="footer-line">
+          <span>${studio.name}</span>
+          <span>${studio.labName}</span>
+          <span>${studioMeta.location}</span>
+          <a href="mailto:${studio.email}">${studio.email}</a>
+        </div>
+        <div class="footer-line footer-muted">
+          <span>${studioMeta.shortDescription}</span>
+        </div>
+      </footer>
+    </div>
+  `;
+};

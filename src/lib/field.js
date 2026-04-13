@@ -5,6 +5,8 @@ const distanceSquared = (ax, ay, bx, by) => {
   return dx * dx + dy * dy;
 };
 
+let activeFieldCleanup = null;
+
 const roundedRectPath = (context, x, y, width, height, radius) => {
   const r = Math.min(radius, width * 0.5, height * 0.5);
 
@@ -218,6 +220,11 @@ const drawLabVessel = (context, vessel, time) => {
 };
 
 export const setupFieldCanvas = () => {
+  if (typeof activeFieldCleanup === "function") {
+    activeFieldCleanup();
+    activeFieldCleanup = null;
+  }
+
   const canvas = document.querySelector("[data-field-canvas]");
   const isLab = document.body.dataset.page === "lab";
 
@@ -251,6 +258,8 @@ export const setupFieldCanvas = () => {
   let width = 0;
   let height = 0;
   let dpr = 1;
+
+  let isCleanedUp = false;
 
   const createLabScene = () => {
     const smokeCount = width < 720 ? 22 : width < 1080 ? 32 : 42;
@@ -908,10 +917,30 @@ export const setupFieldCanvas = () => {
     pointer.targetY = height * 0.46;
   };
 
+  const cleanup = () => {
+    if (isCleanedUp) {
+      return;
+    }
+
+    isCleanedUp = true;
+    window.cancelAnimationFrame(rafId);
+    window.removeEventListener("resize", resize);
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerleave", onPointerLeave);
+    window.removeEventListener("beforeunload", cleanup);
+
+    if (activeFieldCleanup === cleanup) {
+      activeFieldCleanup = null;
+    }
+  };
+
+  activeFieldCleanup = cleanup;
+
   resize();
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerleave", onPointerLeave);
+  window.addEventListener("beforeunload", cleanup);
 
   if (reducedMotion) {
     draw(0);
@@ -919,11 +948,4 @@ export const setupFieldCanvas = () => {
   }
 
   rafId = window.requestAnimationFrame(animate);
-
-  window.addEventListener("beforeunload", () => {
-    window.cancelAnimationFrame(rafId);
-    window.removeEventListener("resize", resize);
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerleave", onPointerLeave);
-  });
 };

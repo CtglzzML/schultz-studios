@@ -6,16 +6,21 @@ import {
   blogEntries,
   contactDetails,
   contactPrompt,
+  defaultLanguage,
   founders,
-  homeDoors,
-  homeHero,
-  homeSignals,
+  getSharedContent,
   labEntries,
   labNotes,
   practiceAreas,
+  resolveContentLanguage,
   studio
 } from "../content/site.js";
 import { renderLayout } from "./layout.js";
+
+const getCurrentLanguage = () =>
+  typeof document === "undefined"
+    ? defaultLanguage
+    : resolveContentLanguage(document.documentElement.lang);
 
 const renderLabVisual = (entry) => {
   if (entry.visual === "aware") {
@@ -63,6 +68,9 @@ const renderPageHero = ({ eyebrow, title, lead, aside, pageClass = "" }) => `
 `;
 
 const renderHome = () => {
+  const { homeHero, homeDoors, homeSignals, homePage } = getSharedContent(
+    getCurrentLanguage()
+  );
   const hero = `
     <section class="hero-home">
       <div class="hero-grid">
@@ -73,8 +81,8 @@ const renderHome = () => {
           </div>
 
           <div class="hero-actions">
-            <a class="button button-primary button-comet" href="/lab.html" data-comet-button><span class="button-label">Enter the Lab</span></a>
-            <a class="button button-secondary button-comet" href="/blog.html" data-comet-button><span class="button-label">${blogPlaceholder.cta}</span></a>
+            <a class="button button-primary button-comet" href="/lab.html" data-comet-button><span class="button-label">${homePage.links.enterLab}</span></a>
+            <a class="button button-secondary button-comet" href="/blog.html" data-comet-button><span class="button-label">${homePage.links.readBlog}</span></a>
           </div>
         </div>
 
@@ -119,7 +127,7 @@ const renderHome = () => {
     <section class="section-block">
       <div class="signals-shell section-frame" data-reveal>
         <div class="signals-intro">
-          <h2 class="section-title">What guides the work.</h2>
+          <h2 class="section-title">${homePage.signals.title}</h2>
         </div>
         <div class="signals-grid">
         ${homeSignals
@@ -147,7 +155,7 @@ const renderHome = () => {
                   <h3>${door.title}</h3>
                   <p>${door.text}</p>
                 </div>
-                <span class="door-arrow">Open</span>
+                <span class="door-arrow">${homePage.links.open}</span>
               </a>
             `
           )
@@ -158,14 +166,13 @@ const renderHome = () => {
     <section class="section-block">
       <div class="split-heading" data-reveal>
         <div>
-          <p class="section-kicker">From the Lab</p>
-          <h2 class="section-title">Things we are making while they are still in motion.</h2>
+          <p class="section-kicker">${homePage.lab.kicker}</p>
+          <h2 class="section-title">${homePage.lab.title}</h2>
         </div>
-        <a class="inline-link" href="/lab.html">See all Lab entries</a>
+        <a class="inline-link" href="/lab.html">${homePage.links.enterLab}</a>
       </div>
       <div class="compact-list">
-        ${labEntries
-          .slice(0, 3)
+        ${homePage.lab.entries
           .map(
             (entry) => `
               <a class="compact-row" href="/lab.html" data-reveal>
@@ -183,21 +190,21 @@ const renderHome = () => {
     <section class="section-block">
       <div class="split-heading" data-reveal>
         <div>
-          <p class="section-kicker">Blog</p>
-          <h2 class="section-title">${blogPlaceholder.homeTitle}</h2>
+          <p class="section-kicker">${homePage.blog.kicker}</p>
+          <h2 class="section-title">${homePage.blog.title}</h2>
         </div>
-        <a class="inline-link" href="/blog.html">${blogPlaceholder.cta}</a>
+        <a class="inline-link" href="/blog.html">${homePage.links.readBlog}</a>
       </div>
       <div class="feature-writing section-frame" data-reveal>
-        <p class="section-copy">${blogPlaceholder.homeText}</p>
+        <p class="section-copy">${homePage.blog.body}</p>
       </div>
     </section>
 
     <section class="section-block section-end">
       <div class="closing-note section-frame" data-reveal>
-        <p class="section-kicker">Contact</p>
-        <h2 class="section-title">If something is taking shape and you want to talk it through, our door is open.</h2>
-        <a class="button button-primary" href="/contact.html">Get in touch</a>
+        <p class="section-kicker">${homePage.contact.kicker}</p>
+        <h2 class="section-title">${homePage.contact.title}</h2>
+        <a class="button button-primary" href="/contact.html">${homePage.links.getInTouch}</a>
       </div>
     </section>
   `;
@@ -308,9 +315,9 @@ const renderLab = () => {
     eyebrow: studio.labName,
     title: "Projects that live inside the Lab.",
     lead:
-      "Schultz' Lab holds the products we are building as part of the studio. Some are still in progress. Some will eventually be finished. What matters is that they belong here.",
+      "<strong>Welcome to the Lab.</strong><br />This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.",
     aside:
-      "This is not a testing ground. It is the place where our own projects live, grow, and stay visible while we keep working on them."
+      "Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio."
   });
 
   const content = `
@@ -375,18 +382,20 @@ const renderLab = () => {
     </section>
 
     <section class="section-block">
-      <div class="section-heading" data-reveal>
-        <p class="section-kicker">Lab rules</p>
-        <h2 class="section-title">A living archive of products we care about building well.</h2>
-      </div>
-      <div class="signal-strip">
-        ${labNotes
-          .map(
-            (note) => `
-              <p class="signal-line" data-reveal>${note}</p>
-            `
-          )
-          .join("")}
+      <div class="lab-rules-card">
+        <div class="section-heading" data-reveal>
+          <p class="section-kicker">Lab rules</p>
+          <h2 class="section-title">A living archive of products we care about building well.</h2>
+        </div>
+        <div class="signal-strip">
+          ${labNotes
+            .map(
+              (note) => `
+                <p class="signal-line" data-reveal>${note}</p>
+              `
+            )
+            .join("")}
+        </div>
       </div>
     </section>
   `;
@@ -431,7 +440,7 @@ const renderContact = () => {
     <section class="section-block contact-shell">
       <div class="contact-note section-frame" data-reveal>
         <p class="section-kicker">Reach out</p>
-        <h2 class="section-title">Tell us what you are thinking about, building, or circling around.</h2>
+        <h2 class="section-title">Tell us what you are thinking, building, or circling around.</h2>
         <div class="contact-detail-list">
           ${contactDetails
             .map(
@@ -531,7 +540,7 @@ const renderArticle = (slug) => {
 export const pageDefinitions = {
   home: {
     title: "Schultz' Studios",
-    description: studio.strapline,
+    description: () => getSharedContent(getCurrentLanguage()).studioMeta.strapline,
     render: renderHome
   },
   about: {
