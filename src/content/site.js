@@ -167,8 +167,8 @@ export const localizedSharedContent = {
       lead:
         "Creamos sitios web, interfaces y sistemas visuales definidos por el detalle y pensados para durar en el tiempo.",
       aside: [
-        "<strong>Schultz' Studios</strong> es donde puedes conocernos, entender nuestra forma de pensar y entrar en el mundo que rodea nuestro trabajo.",
-        "<strong>Schultz' Lab</strong> es nuestro espacio de trabajo: un lugar para ideas que toman forma, primeros desarrollos, proyectos en marcha y proyectos terminados."
+        "<strong>Schultz' Studios</strong> es donde puedes conocernos, entender como trabajamos, ver nuestros proyectos y contactarnos.",
+        "<strong>Schultz' Lab</strong> es nuestro laboratorio personal: un lugar donde las ideas toman forma, primeros desarrollos, proyectos en marcha y proyectos terminados."
       ],
       markers: ["Sitios web", "Portafolios", "Apps web", "Soluciones de IA", "Hecho por humanos"]
     },
@@ -177,7 +177,7 @@ export const localizedSharedContent = {
         label: "Sobre nosotros",
         title: "Quienes somos y como trabajamos.",
         text:
-          "Un estudio pequeño formado por dos trayectorias distintas, un estandar compartido y una manera mas silenciosa de construir.",
+          "Un estudio pequeño formado por dos trayectorias distintas, un estandar compartido y una manera diferente de crear.",
         href: "/about.html"
       },
       {
