@@ -3,7 +3,10 @@
 **Schultz Studios** is a digital studio focused on building thoughtful products, websites, and digital experiences with strong identity and careful execution.
 
 Created as a shared creative and technical space, the studio brings together design sensitivity, product thinking, and practical development.
+---
 
+## Get into the studio
+Link: www.schultz-studios.com
 ---
 
 ## About
