@@ -1866,8 +1866,69 @@ body[data-page="lab"] .nav-link.is-active {
     border-radius: 24px;
   }
 
+  .hero-home {
+    min-height: auto;
+  }
+
+  .hero-home .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    min-height: auto;
+    align-items: start;
+  }
+
+  .hero-home .hero-copy {
+    min-height: auto;
+    gap: 1rem;
+  }
+
+  .hero-home .hero-intro {
+    max-width: none;
+    gap: 0.95rem;
+  }
+
+  .hero-home .hero-title {
+    max-width: 8.5ch;
+    font-size: clamp(2.5rem, 11vw, 4rem);
+  }
+
+  .hero-home .hero-lead {
+    max-width: none;
+  }
+
+  .hero-home .hero-actions {
+    width: 100%;
+    margin-top: 0;
+    padding-top: 0.85rem;
+    gap: 10px;
+  }
+
+  .hero-home .hero-actions .button {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
+  }
+
+  .hero-home .hero-aside {
+    align-self: stretch;
+    gap: 1rem;
+    padding-top: 1.1rem;
+  }
+
+  .hero-home .hero-aside-copy {
+    gap: 0.9rem;
+  }
+
+  .hero-home .hero-markers {
+    padding-top: 0.9rem;
+  }
+
   .hero-index {
     grid-template-columns: 1fr;
+  }
+
+  .hero-home .hero-index {
+    gap: 1rem;
+    margin-top: 1.4rem;
   }
 
   .section-heading,
@@ -1899,6 +1960,25 @@ body[data-page="lab"] .nav-link.is-active {
 @media (max-width: 560px) {
   .brand-meta {
     display: none;
+  }
+
+  .hero-home .hero-title {
+    max-width: none;
+    font-size: clamp(2.2rem, 12vw, 3.4rem);
+    line-height: 0.96;
+  }
+
+  .hero-home .hero-grid {
+    gap: 1.2rem;
+  }
+
+  .hero-home .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-home .hero-actions .button {
+    width: 100%;
   }
 
   .hero-title {
