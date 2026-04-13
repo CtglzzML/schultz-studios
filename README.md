@@ -6,7 +6,9 @@ Created as a shared creative and technical space, the studio brings together des
 ---
 
 ## Get into the studio
+
 Link: www.schultz-studios.com
+
 ---
 
 ## About
