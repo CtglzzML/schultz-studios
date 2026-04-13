@@ -146,9 +146,9 @@ export const localizedSharedContent = {
   es: {
     studioMeta: {
       strapline:
-        "Un pequeno estudio digital que crea sitios web y productos con cuidado.",
+        "Un pequeño estudio digital que crea sitios web y productos con cuidado.",
       description:
-        "Schultz' Studios es donde vive el trabajo. Schultz' Lab es donde las cosas se prueban, se construyen, se afinan y siguen en movimiento.",
+        "Schultz' Studios es donde las ideas toman vida. Schultz' Lab es donde las cosas se prueban, se construyen, se afinan y siguen en movimiento.",
       shortDescription: "Desde nuestro pequeno estudio, hacia el mundo.",
       location: "Noruega / Remoto",
       availability:
@@ -165,7 +165,7 @@ export const localizedSharedContent = {
       eyebrow: "Schultz' Studios",
       title: "Esto es lo que <em>defendemos.</em>",
       lead:
-        "Creamos sitios web, interfaces y sistemas visuales definidos por el detalle y pensados para perdurar.",
+        "Creamos sitios web, interfaces y sistemas visuales definidos por el detalle y pensados para durar en el tiempo.",
       aside: [
         "<strong>Schultz' Studios</strong> es donde puedes conocernos, entender nuestra forma de pensar y entrar en el mundo que rodea nuestro trabajo.",
         "<strong>Schultz' Lab</strong> es nuestro espacio de trabajo: un lugar para ideas que toman forma, primeros desarrollos, proyectos en marcha y proyectos terminados."
@@ -177,28 +177,28 @@ export const localizedSharedContent = {
         label: "Sobre nosotros",
         title: "Quienes somos y como trabajamos.",
         text:
-          "Un estudio pequeno formado por dos trayectorias distintas, un estandar compartido y una manera mas silenciosa de construir.",
+          "Un estudio pequeño formado por dos trayectorias distintas, un estandar compartido y una manera mas silenciosa de construir.",
         href: "/about.html"
       },
       {
         label: "Schultz' Lab",
         title: "Proyectos en marcha, ideas en movimiento.",
         text:
-          "Un espacio interno para lo que estamos creando, probando, refinando y manteniendo vivo mientras todavia no esta terminado.",
+          "Un espacio interno para lo que estamos creando, probando, refinando y manteniendo vivo.",
         href: "/lab.html"
       },
       {
         label: "Blog",
         title: "Un diario silencioso, tomando forma poco a poco.",
         text:
-          "Aqui viviran notas, proceso, reflexiones y pequenos textos cuando esten listos.",
+          "Aqui viviran notas, procesos, reflexiones y pequenos textos cuando esten listos.",
         href: "/blog.html"
       }
     ],
     homeSignals: [
       "No apresuramos el trabajo. Le damos el tiempo que necesita.",
-      "Nada sale hasta que se siente bien.",
-      "Hacemos las cosas con amor."
+      "No publicamos nada hasta que sentimos que realmente esta listo.",
+      "Hacemos las cosas con dedicacion y cuidado."
     ],
     homePage: {
       links: {
@@ -208,7 +208,7 @@ export const localizedSharedContent = {
         getInTouch: "Ponte en contacto"
       },
       signals: {
-        title: "Lo que guia el trabajo."
+        title: "Lo que guia nuestro trabajo."
       },
       lab: {
         kicker: "Desde el Lab",
@@ -218,14 +218,14 @@ export const localizedSharedContent = {
             id: "01",
             name: "Truffle",
             short:
-              "Un lugar sereno para guardar todo lo relacionado con tu mascota en un solo espacio, desde papeles y rutinas hasta los detalles que no quieres perder de vista.",
+              "Un lugar donde guardar todo lo relacionado con tu mascota en un solo espacio, desde documentos y rutinas hasta los detalles que no quieres perder de vista.",
             state: "En progreso"
           },
           {
             id: "02",
             name: "Aware",
             short:
-              "Una app web para seguir los gastos de cualquier evento, de modo que la parte economica siga visible mientras todo lo demas esta en movimiento.",
+              "Una app web para seguir los gastos de cualquier evento, de modo que la parte economica esté controlada mientras todo lo demas esta en movimiento.",
             state: "En progreso"
           }
         ]
@@ -234,12 +234,12 @@ export const localizedSharedContent = {
         kicker: "Blog",
         title: "Un diario que crecera a su propio ritmo.",
         body:
-          "La escritura vivira aqui cuando tenga algo real que decir. Hasta entonces, preferimos dejar el espacio en silencio."
+          "Publicaremos cuando tengamos algo real que decir. Hasta entonces, preferimos dejar el espacio en silencio."
       },
       contact: {
         kicker: "Contacto",
         title:
-          "Si algo esta tomando forma y quieres hablarlo con nosotros, nuestra puerta esta abierta."
+          "Si tienes una idea y quieres darle forma, nuestra puerta esta abierta."
       }
     }
   }
