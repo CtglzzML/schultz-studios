@@ -341,19 +341,14 @@ const renderLab = () => {
       <div class="page-hero-grid">
         <div class="page-hero-copy" data-reveal>
           <p class="eyebrow">${studio.labName}</p>
-          <h1 class="page-title">Projects that live inside the Lab.</h1>
-          <p class="page-lead"><strong>Welcome to the Lab.</strong><br />This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.</p>
-          <p class="page-lead page-lead-secondary">Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio.</p>
-        </div>
-        <aside class="lab-states-card" data-reveal>
-          <p class="lab-states-kicker">LAB STATES</p>
-          <div class="lab-states-list">
-            <span>In ideation</span>
-            <span>Early build</span>
-            <span>In progress</span>
-            <span>Finished</span>
+          <div class="lab-hero-layout">
+            <h1 class="page-title">Projects that live inside the Lab.</h1>
+            <div class="lab-hero-story">
+              <p class="page-lead"><strong>Welcome to the Lab.</strong> This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.</p>
+              <p class="page-lead page-lead-secondary">Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio.</p>
+            </div>
           </div>
-        </aside>
+        </div>
       </div>
     </section>
   `;

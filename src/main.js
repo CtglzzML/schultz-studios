@@ -28,10 +28,7 @@ const saveLanguagePreference = (language) => {
   }
 };
 
-const getPreferredLanguage = () =>
-  resolveContentLanguage(
-    getStoredLanguage() ?? document.documentElement.lang ?? defaultLanguage
-  );
+const getPreferredLanguage = () => defaultLanguage;
 
 const setDocumentLanguage = (language) => {
   document.documentElement.lang = resolveContentLanguage(language);
