@@ -228,14 +228,24 @@ const renderHome = () => {
 };
 
 const renderAbout = () => {
-  const hero = renderPageHero({
-    eyebrow: "About Us",
-    title: "Welcome to our small digital home.",
-    lead:
-      "We are Sara and Carlos. Sara works across UX and UI design. Carlos studies computer science and machine learning. Schultz' Studios is where those two worlds meet and keep growing together.",
-    aside:
-      "Why Schultz'? Because our first home after moving to Norway in 2022 was on Schultz' Gate, and that was the beginning of this whole story."
-  });
+  const hero = `
+    <section class="page-hero page-hero-about">
+      <div class="page-hero-grid">
+        <div class="page-hero-copy" data-reveal>
+          <p class="eyebrow">About Us</p>
+          <h1 class="page-title">Welcome to our small digital home.</h1>
+        </div>
+        <aside class="page-aside" data-reveal>
+          <p>
+            We are Sara and Carlos. Sara works across UX and UI design. Carlos studies computer science and machine learning. Schultz' Studios is where those two worlds meet and keep growing together.
+          </p>
+          <p>
+            Why Schultz'? Because our first home after moving to Norway in 2022 was on Schultz' Gate, and that was the beginning of this whole story.
+          </p>
+        </aside>
+      </div>
+    </section>
+  `;
 
   const content = `
     <section class="section-block">
@@ -326,14 +336,27 @@ const renderAbout = () => {
 
 const renderLab = () => {
   const initialEntry = labEntries[0];
-  const hero = renderPageHero({
-    eyebrow: studio.labName,
-    title: "Projects that live inside the Lab.",
-    lead:
-      "<strong>Welcome to the Lab.</strong><br />This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.",
-    aside:
-      "Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio."
-  });
+  const hero = `
+    <section class="page-hero page-hero-lab">
+      <div class="page-hero-grid">
+        <div class="page-hero-copy" data-reveal>
+          <p class="eyebrow">${studio.labName}</p>
+          <h1 class="page-title">Projects that live inside the Lab.</h1>
+          <p class="page-lead"><strong>Welcome to the Lab.</strong><br />This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.</p>
+          <p class="page-lead page-lead-secondary">Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio.</p>
+        </div>
+        <aside class="lab-states-card" data-reveal>
+          <p class="lab-states-kicker">LAB STATES</p>
+          <div class="lab-states-list">
+            <span>In ideation</span>
+            <span>Early build</span>
+            <span>In progress</span>
+            <span>Finished</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  `;
 
   const content = `
     <section class="section-block lab-shell">
@@ -421,6 +444,7 @@ const renderLab = () => {
 const renderBlog = () => {
   const featured = blogEntries[0];
   const hero = renderPageHero({
+    pageClass: "page-hero-blog",
     eyebrow: "Blog",
     title: blogPlaceholder.title,
     lead: blogPlaceholder.lead,
@@ -444,6 +468,7 @@ const renderBlog = () => {
 
 const renderContact = () => {
   const hero = renderPageHero({
+    pageClass: "page-hero-contact",
     eyebrow: "Contact",
     title: "Open a draft and say hello.",
     lead: "No form to fill twice. Just open the draft, write a few lines, and send it our way.",

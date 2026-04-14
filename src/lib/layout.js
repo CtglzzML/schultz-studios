@@ -2,7 +2,6 @@ import {
   defaultLanguage,
   getSharedSection,
   resolveContentLanguage,
-  supportedLanguages,
   studio
 } from "../content/site.js";
 
@@ -27,25 +26,6 @@ const renderNavLinks = (navPageId, language) =>
       `;
     })
     .join("");
-
-const renderLanguageSwitcher = (language) => `
-  <div class="language-switcher" data-language-switcher aria-label="Language switcher">
-    ${supportedLanguages
-      .map(
-        (code) => `
-          <button
-            class="language-option${code === language ? " is-active" : ""}"
-            type="button"
-            data-language-option="${code}"
-            aria-pressed="${String(code === language)}"
-          >
-            ${code.toUpperCase()}
-          </button>
-        `
-      )
-      .join("")}
-  </div>
-`;
 
 export const renderLayout = ({
   pageId,
@@ -89,8 +69,6 @@ export const renderLayout = ({
             <nav class="site-nav" aria-label="Main navigation">
               ${renderNavLinks(navPageId, language)}
             </nav>
-
-            ${renderLanguageSwitcher(language)}
           </div>
         </div>
       </header>
