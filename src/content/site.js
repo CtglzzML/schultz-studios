@@ -309,7 +309,7 @@ export const labEntries = [
   },
   {
     id: "03",
-    name: "Sara's Portfolio",
+    name: "Sara' s Portfolio",
     type: "Portfolio website",
     state: "Early build",
     year: "2026",
