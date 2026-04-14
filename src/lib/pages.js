@@ -237,10 +237,13 @@ const renderAbout = () => {
         </div>
         <aside class="page-aside" data-reveal>
           <p>
-            We are Sara and Carlos. Sara works across UX and UI design. Carlos studies computer science and machine learning. Schultz' Studios is where those two worlds meet and keep growing together.
+            We are Sara and Carlos. Sara works across UX and UI design. Carlos is a Machine Learning graduate and Computer Science student in OPIT. Schultz' Studios is where those two worlds meet and keep growing together.
           </p>
           <p>
-            Why Schultz'? Because our first home after moving to Norway in 2022 was on Schultz' Gate, and that was the beginning of this whole story.
+            Why Schultz'? 
+          </p>
+          <p>
+          Because our first home after moving to Norway in 2022 was on Schultz' Gate, and that was the beginning of this whole story.
           </p>
         </aside>
       </div>
