@@ -306,6 +306,32 @@ export const labEntries = [
       "Aware is designed to make group spending easier to read before things get messy, giving a clearer sense of what is being spent, where, and why.",
     tags: ["Events", "Expense tracking", "Web product"],
     footprint: "Budgets / visibility / shared planning"
+  },
+  {
+    id: "03",
+    name: "Sara's Portfolio",
+    type: "Portfolio website",
+    state: "Early build",
+    year: "2026",
+    short:
+      "A personal portfolio concept for presenting Sara's work, process, and design perspective with clarity and care.",
+    detail:
+      "A personal portfolio concept for presenting Sara's work, process, and design perspective with clarity and care.",
+    tags: ["Portfolio", "Early concept", "Web presence"],
+    footprint: "Work / process / design perspective"
+  },
+  {
+    id: "04",
+    name: "Casa Rural Carmen",
+    type: "Website concept",
+    state: "In ideation",
+    year: "2026",
+    short:
+      "A future website concept for a family rural house, imagined as a calm and welcoming digital presence.",
+    detail:
+      "A future website concept for a family rural house, imagined as a calm and welcoming digital presence.",
+    tags: ["Hospitality", "Early concept", "Website"],
+    footprint: "Place / welcome / digital presence"
   }
 ];
 

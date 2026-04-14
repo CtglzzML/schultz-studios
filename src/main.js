@@ -184,8 +184,8 @@ const setupLabArchive = () => {
     footprint: document.querySelector('[data-lab-preview="footprint"]')
   };
 
-  const renderLabVisual = (visual) => {
-    if (visual === "aware") {
+  const renderLabVisual = (entry) => {
+    if (entry.visual === "aware") {
       return `
         <div class="lab-visual lab-visual-aware" data-lab-preview-visual="aware">
           <div class="lab-phone">
@@ -197,6 +197,21 @@ const setupLabArchive = () => {
                 <p>Your wallet</p>
                 <p>didn't.</p>
               </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (!entry.visual) {
+      return `
+        <div class="lab-visual lab-visual-concept" data-lab-preview-visual="concept">
+          <div class="lab-concept-card">
+            <span class="lab-visual-mark">In development</span>
+            <div class="lab-concept-copy">
+              <p>${entry.name ?? ""}</p>
+              <strong>${entry.state ?? ""}</strong>
+              <span>${entry.type ?? ""}</span>
             </div>
           </div>
         </div>
@@ -236,7 +251,7 @@ const setupLabArchive = () => {
       )
       .join("");
 
-    visualRoot.innerHTML = renderLabVisual(item.dataset.visual ?? "truffle");
+    visualRoot.innerHTML = renderLabVisual(item.dataset);
   };
 
   items.forEach((item) => {

@@ -248,12 +248,10 @@ export const setupFieldCanvas = () => {
   };
 
   let points = [];
-  let labSmoke = [];
   let labBubbles = [];
   let labEffervescence = [];
-  let labRipples = [];
   let labParticles = [];
-  let labFlares = [];
+  let labRipples = [];
   let rafId = 0;
   let width = 0;
   let height = 0;
@@ -262,33 +260,10 @@ export const setupFieldCanvas = () => {
   let isCleanedUp = false;
 
   const createLabScene = () => {
-    const smokeCount = width < 720 ? 22 : width < 1080 ? 32 : 42;
     const bubbleCount = width < 720 ? 10 : width < 1080 ? 14 : 18;
     const effervescenceCount = width < 720 ? 24 : width < 1080 ? 34 : 48;
-    const rippleCount = width < 720 ? 3 : 6;
     const particleCount = width < 720 ? 52 : width < 1080 ? 74 : 96;
-    const flareCount = width < 720 ? 10 : 16;
-
-    labSmoke = Array.from({ length: smokeCount }, () => {
-      const baseX = width * (0.04 + Math.random() * 0.92);
-      const baseY = height * (0.6 + Math.random() * 0.34);
-
-      return {
-        baseX,
-        baseY,
-        x: baseX,
-        y: baseY,
-        radiusX: 100 + Math.random() * 210,
-        radiusY: 54 + Math.random() * 140,
-        phase: Math.random() * Math.PI * 2,
-        drift: 0.22 + Math.random() * 0.36,
-        sway: 24 + Math.random() * 50,
-        rise: 0.08 + Math.random() * 0.22,
-        alpha: 0.05 + Math.random() * 0.08,
-        pull: 0,
-        depth: 0.7 + Math.random() * 0.9
-      };
-    });
+    const rippleCount = 0;
 
     const bubbleMinDistance = width < 720 ? 58 : width < 1080 ? 74 : 88;
     const bubbleMinDistanceSquared = bubbleMinDistance * bubbleMinDistance;
@@ -363,15 +338,6 @@ export const setupFieldCanvas = () => {
       };
     });
 
-    labRipples = Array.from({ length: rippleCount }, () => ({
-      x: width * (0.1 + Math.random() * 0.8),
-      y: height * (0.12 + Math.random() * 0.36),
-      baseRadius: 38 + Math.random() * 90,
-      speed: 0.16 + Math.random() * 0.2,
-      phase: Math.random() * Math.PI * 2,
-      alpha: 0.04 + Math.random() * 0.04
-    }));
-
     labParticles = Array.from({ length: particleCount }, (_, index) => {
       const anchor = labBubbles[index % labBubbles.length] || {
         x: width * 0.5,
@@ -392,24 +358,22 @@ export const setupFieldCanvas = () => {
       };
     });
 
-    labFlares = Array.from({ length: flareCount }, () => ({
-      x: width * (0.06 + Math.random() * 0.88),
-      y: height * (0.04 + Math.random() * 0.5),
-      radius: 8 + Math.random() * 26,
-      alpha: 0.04 + Math.random() * 0.08,
+    labRipples = Array.from({ length: rippleCount }, () => ({
+      x: width * (0.1 + Math.random() * 0.8),
+      y: height * (0.12 + Math.random() * 0.36),
+      baseRadius: 38 + Math.random() * 90,
+      speed: 0.16 + Math.random() * 0.2,
       phase: Math.random() * Math.PI * 2,
-      drift: 0.14 + Math.random() * 0.18
+      alpha: 0.04 + Math.random() * 0.04
     }));
   };
 
   const createScatter = () => {
     points = [];
-    labSmoke = [];
     labBubbles = [];
     labEffervescence = [];
-    labRipples = [];
     labParticles = [];
-    labFlares = [];
+    labRipples = [];
 
     if (isLab) {
       createLabScene();
@@ -520,161 +484,6 @@ export const setupFieldCanvas = () => {
       context.fillRect(0, y, width, 1);
     }
 
-    labFlares.forEach((flare, index) => {
-      const driftX = Math.sin(time * 0.0002 * flare.drift + flare.phase + index * 0.14) * 10;
-      const driftY = Math.cos(time * 0.00024 * flare.drift + flare.phase) * 8;
-      const gradient = context.createRadialGradient(
-        flare.x + driftX,
-        flare.y + driftY,
-        0,
-        flare.x + driftX,
-        flare.y + driftY,
-        flare.radius
-      );
-      gradient.addColorStop(0, `rgba(255, 92, 92, ${flare.alpha})`);
-      gradient.addColorStop(0.45, `rgba(255, 40, 40, ${flare.alpha * 0.5})`);
-      gradient.addColorStop(1, "rgba(255, 20, 20, 0)");
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.arc(flare.x + driftX, flare.y + driftY, flare.radius, 0, Math.PI * 2);
-      context.fill();
-    });
-
-    const verticalSweepX = ((time * 0.06) % (width + 260)) - 130;
-    const sonar = context.createLinearGradient(verticalSweepX - 88, 0, verticalSweepX + 88, 0);
-    sonar.addColorStop(0, "rgba(255, 82, 82, 0)");
-    sonar.addColorStop(0.5, "rgba(255, 102, 102, 0.1)");
-    sonar.addColorStop(1, "rgba(255, 82, 82, 0)");
-    context.fillStyle = sonar;
-    context.fillRect(verticalSweepX - 88, 0, 176, height);
-
-    const smokeInfluenceRadius = clamp(Math.min(width, height) * 0.28, 140, 260);
-
-    labSmoke.forEach((smoke, index) => {
-      const lift = (time * 0.011 * smoke.rise + smoke.phase * 18) % (height * 0.52 + smoke.radiusY * 2.2);
-      smoke.y = smoke.baseY - lift;
-      smoke.x =
-        smoke.baseX +
-        Math.sin(time * 0.00024 * smoke.drift + smoke.phase + index * 0.2) * smoke.sway;
-
-      let pullTarget = 0;
-
-      if (pointer.active) {
-        const dx = pointer.x - smoke.x;
-        const dy = pointer.y - smoke.y;
-        const distance = Math.hypot(dx, dy) || 1;
-        const influence = Math.max(0, 1 - distance / smokeInfluenceRadius);
-        smoke.x -= (dx / distance) * influence * influence * (22 + smoke.depth * 10);
-        smoke.y -= (dy / distance) * influence * (6 + smoke.depth * 3.4);
-        pullTarget = influence;
-      }
-
-      smoke.pull += (pullTarget - smoke.pull) * 0.08;
-
-      if (smoke.y < -smoke.radiusY * 1.8) {
-        smoke.baseY = height * (0.72 + Math.random() * 0.22);
-        smoke.baseX = width * (0.04 + Math.random() * 0.92);
-        smoke.y = smoke.baseY;
-        smoke.x = smoke.baseX;
-      }
-
-      const gradient = context.createRadialGradient(smoke.x, smoke.y, 0, smoke.x, smoke.y, smoke.radiusX);
-      gradient.addColorStop(0, `rgba(255, 122, 122, ${smoke.alpha + smoke.pull * 0.1})`);
-      gradient.addColorStop(0.22, `rgba(236, 46, 46, ${smoke.alpha * 0.96})`);
-      gradient.addColorStop(0.6, `rgba(126, 10, 10, ${smoke.alpha * 0.58})`);
-      gradient.addColorStop(1, "rgba(30, 0, 0, 0)");
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.ellipse(
-        smoke.x,
-        smoke.y,
-        smoke.radiusX,
-        smoke.radiusY,
-        Math.sin(smoke.phase) * 0.12,
-        0,
-        Math.PI * 2
-      );
-      context.fill();
-    });
-
-    labBubbles.forEach((bubble, index) => {
-      const lift = (time * 0.00042 * bubble.speed + bubble.phase * 28) % (height * 0.52 + 220);
-      bubble.y = bubble.baseY - lift;
-      bubble.x =
-        bubble.baseX +
-        Math.sin(time * 0.00026 * bubble.drift + bubble.phase + index * 0.16) * 18;
-
-      if (pointer.active) {
-        const dx = bubble.x - pointer.x;
-        const dy = bubble.y - pointer.y;
-        const distance = Math.hypot(dx, dy) || 1;
-        const influence = Math.max(0, 1 - distance / 180);
-        bubble.x += (dx / distance) * influence * (12 + bubble.size * 0.34);
-        bubble.y += (dy / distance) * influence * (5 + bubble.size * 0.16);
-        bubble.alpha = 0.22 + influence * 0.34;
-        bubble.glow = 0.24 + influence * 0.42;
-      } else {
-        bubble.alpha += (bubble.opacityBias - bubble.alpha) * 0.06;
-        bubble.glow += (0.24 - bubble.glow) * 0.08;
-      }
-
-      if (bubble.y < -bubble.size * 3) {
-        bubble.baseY = height * (0.62 + Math.random() * 0.22);
-        bubble.baseX = width * (0.06 + Math.random() * 0.88);
-        bubble.y = bubble.baseY;
-        bubble.x = bubble.baseX;
-      }
-
-      const wobbleX = Math.sin(time * 0.00058 * bubble.wobble + bubble.wobblePhase) * bubble.size * bubble.irregularity;
-      const wobbleY = Math.cos(time * 0.00052 * bubble.wobble + bubble.wobblePhase * 0.8) * bubble.size * bubble.irregularity;
-      const radiusX = bubble.size * bubble.stretchX + wobbleX * 0.35;
-      const radiusY = bubble.size * bubble.stretchY + wobbleY * 0.35;
-      const rotation = Math.sin(bubble.phase * 0.6 + time * 0.00018) * 0.3;
-      const strokeWidth = 0.8 + bubble.ringWidth * 0.7;
-
-      context.save();
-      context.translate(bubble.x, bubble.y);
-      context.rotate(rotation);
-
-      context.strokeStyle = `rgba(255, 214, 214, ${bubble.alpha * 0.72})`;
-      context.lineWidth = strokeWidth;
-      context.beginPath();
-      context.ellipse(0, 0, radiusX, radiusY, 0, 0, Math.PI * 2);
-      context.stroke();
-
-      const bubbleGlow = context.createRadialGradient(
-        wobbleX * 0.18,
-        wobbleY * 0.18,
-        0,
-        wobbleX * 0.18,
-        wobbleY * 0.18,
-        bubble.size * (3.1 + bubble.glow * 0.4)
-      );
-      bubbleGlow.addColorStop(0, `rgba(255, 142, 142, ${bubble.glow * 0.78})`);
-      bubbleGlow.addColorStop(0.28, `rgba(255, 64, 64, ${bubble.glow * 0.4})`);
-      bubbleGlow.addColorStop(1, "rgba(30, 0, 0, 0)");
-      context.fillStyle = bubbleGlow;
-      context.beginPath();
-      context.arc(0, 0, bubble.size * (3.1 + bubble.glow * 0.4), 0, Math.PI * 2);
-      context.fill();
-
-      const highlightX = radiusX * bubble.highlightShiftX;
-      const highlightY = radiusY * bubble.highlightShiftY;
-      context.fillStyle = `rgba(255, 248, 248, ${bubble.alpha * (0.18 + bubble.tint)})`;
-      context.beginPath();
-      context.ellipse(
-        highlightX,
-        highlightY,
-        bubble.size * bubble.highlightSize,
-        bubble.size * bubble.highlightSize * 0.72,
-        rotation * -0.5,
-        0,
-        Math.PI * 2
-      );
-      context.fill();
-      context.restore();
-    });
-
     labEffervescence.forEach((spark, index) => {
       const lift = (time * 0.0012 * spark.speed + spark.phase * 22) % (height * 0.52 + 180);
       spark.y = spark.baseY - lift;
@@ -726,18 +535,6 @@ export const setupFieldCanvas = () => {
       context.fill();
     });
 
-    labRipples.forEach((ripple, index) => {
-      const pulse = (time * 0.0012 * ripple.speed + ripple.phase + index * 0.2) % 1;
-      const radius = ripple.baseRadius + pulse * 180;
-      const alpha = ripple.alpha * (1 - pulse);
-
-      context.strokeStyle = `rgba(255, 88, 88, ${alpha})`;
-      context.lineWidth = 1;
-      context.beginPath();
-      context.arc(ripple.x, ripple.y, radius, 0, Math.PI * 2);
-      context.stroke();
-    });
-
     labParticles.forEach((particle, index) => {
       particle.y -= particle.speed;
       particle.x =
@@ -781,36 +578,6 @@ export const setupFieldCanvas = () => {
         particle.size = 0.8 + Math.random() * 2.2;
       }
     });
-
-    if (pointer.active) {
-      const localGlow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 180);
-      localGlow.addColorStop(0, "rgba(255, 80, 80, 0.16)");
-      localGlow.addColorStop(0.24, "rgba(255, 42, 42, 0.08)");
-      localGlow.addColorStop(1, "rgba(30, 0, 0, 0)");
-      context.fillStyle = localGlow;
-      context.fillRect(0, 0, width, height);
-    }
-
-    const benchGlow = context.createLinearGradient(0, height, 0, height * 0.52);
-    benchGlow.addColorStop(0, "rgba(255, 32, 32, 0.14)");
-    benchGlow.addColorStop(0.5, "rgba(255, 32, 32, 0.05)");
-    benchGlow.addColorStop(1, "rgba(255, 32, 32, 0)");
-    context.fillStyle = benchGlow;
-    context.fillRect(0, 0, width, height);
-
-    const fogBank = context.createRadialGradient(width * 0.5, height * 0.98, 0, width * 0.5, height * 0.98, width * 0.74);
-    fogBank.addColorStop(0, "rgba(255, 34, 34, 0.18)");
-    fogBank.addColorStop(0.28, "rgba(180, 12, 12, 0.12)");
-    fogBank.addColorStop(1, "rgba(30, 0, 0, 0)");
-    context.fillStyle = fogBank;
-    context.fillRect(0, 0, width, height);
-
-    const softFog = context.createLinearGradient(0, 0, 0, height);
-    softFog.addColorStop(0, "rgba(10, 1, 1, 0)");
-    softFog.addColorStop(0.66, "rgba(10, 1, 1, 0.04)");
-    softFog.addColorStop(1, "rgba(10, 1, 1, 0.24)");
-    context.fillStyle = softFog;
-    context.fillRect(0, 0, width, height);
   };
 
   const drawPoints = (time) => {

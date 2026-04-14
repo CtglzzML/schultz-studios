@@ -41,6 +41,21 @@ const renderLabVisual = (entry) => {
     `;
   }
 
+  if (!entry.visual) {
+    return `
+      <div class="lab-visual lab-visual-concept" data-lab-preview-visual="concept">
+        <div class="lab-concept-card">
+          <span class="lab-visual-mark">In development</span>
+          <div class="lab-concept-copy">
+            <p>${entry.name}</p>
+            <strong>${entry.state}</strong>
+            <span>${entry.type}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="lab-visual lab-visual-truffle" data-lab-preview-visual="truffle">
       <div class="lab-phone">
