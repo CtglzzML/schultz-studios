@@ -63,35 +63,28 @@ export const localizedSharedContent = {
     ],
     homeHero: {
       eyebrow: "Schultz' Studios",
-      title: "This is what we stand <em>for.</em>",
-      lead:
-        "We create websites, interfaces, and visual systems shaped by detail and built to last.",
-      aside: [
-        "<strong>Schultz' Studios</strong> is where you get to know us, our thinking, and the world around our work.",
-        "<strong>Schultz' Lab</strong> is our working space: a place for ideas taking shape, early builds, works in progress, and finished projects."
-      ],
-      markers: ["Websites", "Portfolios", "Web apps", "AI solutions", "Human-made"]
+      title: "Welcome to<br>our <em>space</em>",
+      lead: "Because only well-made things stay in orbit",
+      aside: "Built in Norway. Made with care, in a quieter rhythm.",
+      markers: ["Websites", "Products", "Interfaces", "Human-made"]
     },
     homeDoors: [
       {
         label: "About Us",
-        title: "Who we are, and how we work.",
-        text:
-          "A small studio shaped by two different backgrounds, one shared standard, and a quieter way of building.",
+        title: "About the studio",
+        text: "Who we are and how we work.",
         href: "/about.html"
       },
       {
-        label: "Schultz' Lab",
-        title: "Builds in progress, ideas in motion.",
-        text:
-          "An internal space for things we are making, testing, refining, and keeping alive while they are still unfinished.",
+        label: "Lab",
+        title: "Inside the Lab",
+        text: "What we are building, testing, and refining.",
         href: "/lab.html"
       },
       {
         label: "Blog",
-        title: "A quiet journal, slowly taking shape.",
-        text:
-          "Notes, process, reflections, and small pieces of writing will live here when they are ready.",
+        title: "Notes and writing",
+        text: "Thoughts, process, and quiet essays.",
         href: "/blog.html"
       }
     ],
@@ -102,44 +95,44 @@ export const localizedSharedContent = {
     ],
     homePage: {
       links: {
-        enterLab: "Enter the Lab",
-        readBlog: "Read the blog",
         open: "Open",
         getInTouch: "Get in touch"
       },
-      signals: {
-        title: "What guides the work."
+      explore: {
+        kicker: "Explore",
+        title: "Three places to start."
       },
-      lab: {
-        kicker: "From the Lab",
-        title: "Things we are making while they are still in motion.",
-        entries: [
+      preview: {
+        kicker: "From the studio",
+        title: "A small selection from what is in motion.",
+        items: [
           {
-            id: "01",
+            label: "Lab / 01",
             name: "Truffle",
-            short:
-              "A calm place to keep everything related to your pet in one space, from papers and routines to the details you do not want to lose track of.",
-            state: "In progress"
+            short: "A calmer home for everyday pet care.",
+            meta: "In progress",
+            href: "/lab.html"
           },
           {
-            id: "02",
+            label: "Lab / 02",
             name: "Aware",
-            short:
-              "A web app for keeping track of spending around any event, so the money side stays visible while everything else is moving.",
-            state: "In progress"
+            short: "An event spending tool built for visibility.",
+            meta: "In progress",
+            href: "/lab.html"
+          },
+          {
+            label: "Blog",
+            name: "The case for interfaces that exhale",
+            short: "On pacing, negative space, and calm interfaces.",
+            meta: "4 min read",
+            href: "/blog-interfaces-that-exhale.html"
           }
         ]
       },
-      blog: {
-        kicker: "Blog",
-        title: "A journal that will grow in its own time.",
-        body:
-          "Writing will live here when it has something real to say. Until then, we would rather leave the space quiet."
-      },
       contact: {
         kicker: "Contact",
-        title:
-          "If something is taking shape and you want to talk it through, our door is open."
+        title: "Have something in mind?",
+        body: "We would be glad to hear from you."
       }
     }
   },
@@ -163,35 +156,28 @@ export const localizedSharedContent = {
     ],
     homeHero: {
       eyebrow: "Schultz' Studios",
-      title: "Esto es lo que <em>defendemos.</em>",
-      lead:
-        "Creamos sitios web, interfaces y sistemas visuales definidos por el detalle y pensados para durar en el tiempo.",
-      aside: [
-        "<strong>Schultz' Studios</strong> es donde puedes conocernos, entender como trabajamos, ver nuestros proyectos y contactarnos.",
-        "<strong>Schultz' Lab</strong> es nuestro laboratorio personal: un lugar donde las ideas toman forma, primeros desarrollos, proyectos en marcha y proyectos terminados."
-      ],
-      markers: ["Sitios web", "Portafolios", "Apps web", "Soluciones de IA", "Hecho por humanos"]
+      title: "Sitios web y productos con <em>caracter.</em>",
+      lead: "Un pequeno estudio digital para sitios web, interfaces y proyectos propios.",
+      aside: "Hecho en Noruega. Con cuidado y un ritmo mas tranquilo.",
+      markers: ["Sitios web", "Productos", "Interfaces", "Hecho por humanos"]
     },
     homeDoors: [
       {
         label: "Sobre nosotros",
-        title: "Quienes somos y como trabajamos.",
-        text:
-          "Un estudio pequeño formado por dos trayectorias distintas, un estandar compartido y una manera diferente de crear.",
+        title: "Sobre el estudio",
+        text: "Quienes somos y como trabajamos.",
         href: "/about.html"
       },
       {
-        label: "Schultz' Lab",
-        title: "Proyectos en marcha, ideas en movimiento.",
-        text:
-          "Un espacio interno para lo que estamos creando, probando, refinando y manteniendo vivo.",
+        label: "Lab",
+        title: "Dentro del Lab",
+        text: "Lo que estamos creando, probando y afinando.",
         href: "/lab.html"
       },
       {
         label: "Blog",
-        title: "Un diario silencioso, tomando forma poco a poco.",
-        text:
-          "Aqui viviran notas, procesos, reflexiones y pequenos textos cuando esten listos.",
+        title: "Notas y escritura",
+        text: "Ideas, proceso y textos tranquilos.",
         href: "/blog.html"
       }
     ],
@@ -202,44 +188,44 @@ export const localizedSharedContent = {
     ],
     homePage: {
       links: {
-        enterLab: "Entrar al Lab",
-        readBlog: "Leer el blog",
         open: "Abrir",
         getInTouch: "Ponte en contacto"
       },
-      signals: {
-        title: "Lo que guia nuestro trabajo."
+      explore: {
+        kicker: "Explorar",
+        title: "Tres lugares por donde empezar."
       },
-      lab: {
-        kicker: "Desde el Lab",
-        title: "Cosas que estamos creando mientras siguen en movimiento.",
-        entries: [
+      preview: {
+        kicker: "Desde el estudio",
+        title: "Una pequena seleccion de lo que esta en movimiento.",
+        items: [
           {
-            id: "01",
+            label: "Lab / 01",
             name: "Truffle",
-            short:
-              "Un lugar donde guardar todo lo relacionado con tu mascota en un solo espacio, desde documentos y rutinas hasta los detalles que no quieres perder de vista.",
-            state: "En progreso"
+            short: "Un hogar mas calmado para el cuidado diario de tu mascota.",
+            meta: "En progreso",
+            href: "/lab.html"
           },
           {
-            id: "02",
+            label: "Lab / 02",
             name: "Aware",
-            short:
-              "Una app web para seguir los gastos de cualquier evento, de modo que la parte economica esté controlada mientras todo lo demas esta en movimiento.",
-            state: "En progreso"
+            short: "Una herramienta para gastos de eventos hecha para dar visibilidad.",
+            meta: "En progreso",
+            href: "/lab.html"
+          },
+          {
+            label: "Blog",
+            name: "The case for interfaces that exhale",
+            short: "Sobre el ritmo, el espacio negativo y las interfaces calmadas.",
+            meta: "4 min de lectura",
+            href: "/blog-interfaces-that-exhale.html"
           }
         ]
       },
-      blog: {
-        kicker: "Blog",
-        title: "Un diario que crecera a su propio ritmo.",
-        body:
-          "Publicaremos cuando tengamos algo real que decir. Hasta entonces, preferimos dejar el espacio en silencio."
-      },
       contact: {
         kicker: "Contacto",
-        title:
-          "Si tienes una idea y quieres darle forma, nuestra puerta esta abierta."
+        title: "Tienes algo en mente?",
+        body: "Nos encantara escucharlo."
       }
     }
   }
@@ -284,8 +270,9 @@ export const labEntries = [
     name: "Truffle",
     visual: "truffle",
     type: "Mobile app",
-    state: "In progress",
+    state: "Finished",
     year: "2026",
+    built: "2026",
     short:
       "A calm place to keep everything related to your pet in one space, from papers and routines to the details you do not want to lose track of.",
     detail:
@@ -300,6 +287,7 @@ export const labEntries = [
     type: "Web app",
     state: "In progress",
     year: "2026",
+    built: "2026",
     short:
       "A web app for keeping track of spending around any event, so the money side stays visible while everything else is moving.",
     detail:
@@ -313,6 +301,7 @@ export const labEntries = [
     type: "Portfolio website",
     state: "Early build",
     year: "2026",
+    built: "2026",
     short:
       "A personal portfolio concept for presenting Sara's work, process, and design perspective with clarity and care.",
     detail:
@@ -326,6 +315,7 @@ export const labEntries = [
     type: "Website concept",
     state: "In ideation",
     year: "2026",
+    built: "2026",
     short:
       "A future website concept for a family rural house, imagined as a calm and welcoming digital presence.",
     detail:

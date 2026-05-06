@@ -260,12 +260,12 @@ export const setupFieldCanvas = () => {
   let isCleanedUp = false;
 
   const createLabScene = () => {
-    const bubbleCount = width < 720 ? 10 : width < 1080 ? 14 : 18;
-    const effervescenceCount = width < 720 ? 24 : width < 1080 ? 34 : 48;
-    const particleCount = width < 720 ? 52 : width < 1080 ? 74 : 96;
+    const bubbleCount = width < 720 ? 18 : width < 1080 ? 26 : 38;
+    const effervescenceCount = width < 720 ? 44 : width < 1080 ? 64 : 88;
+    const particleCount = width < 720 ? 78 : width < 1080 ? 110 : 150;
     const rippleCount = 0;
 
-    const bubbleMinDistance = width < 720 ? 58 : width < 1080 ? 74 : 88;
+    const bubbleMinDistance = width < 720 ? 42 : width < 1080 ? 56 : 68;
     const bubbleMinDistanceSquared = bubbleMinDistance * bubbleMinDistance;
     const bubbleBases = [];
     let attempts = 0;
@@ -289,17 +289,20 @@ export const setupFieldCanvas = () => {
         continue;
       }
 
+      const isLargeBubble = Math.random() < 0.28;
+      const size = isLargeBubble ? 9 + Math.random() * 20 : 2.8 + Math.random() * 8.5;
+
       bubbleBases.push({
         baseX,
         baseY,
         x: baseX,
         y: baseY,
-        size: 3.5 + Math.random() * 9,
+        size,
         speed: 0.22 + Math.random() * 0.58,
         drift: 0.2 + Math.random() * 1.1,
         phase: Math.random() * Math.PI * 2,
-        alpha: 0.12 + Math.random() * 0.18,
-        glow: 0.12 + Math.random() * 0.24,
+        alpha: isLargeBubble ? 0.08 + Math.random() * 0.1 : 0.12 + Math.random() * 0.2,
+        glow: isLargeBubble ? 0.14 + Math.random() * 0.2 : 0.16 + Math.random() * 0.28,
         stretchX: 0.78 + Math.random() * 0.64,
         stretchY: 0.78 + Math.random() * 0.62,
         ringWidth: 0.42 + Math.random() * 0.42,
@@ -328,7 +331,7 @@ export const setupFieldCanvas = () => {
         baseY: anchor.baseY + (Math.random() - 0.5) * 26,
         x: anchor.baseX,
         y: anchor.baseY,
-        size: 0.5 + Math.random() * 1.6,
+        size: Math.random() < 0.18 ? 1.8 + Math.random() * 2.4 : 0.45 + Math.random() * 1.8,
         speed: 0.54 + Math.random() * 1.2,
         drift: 0.32 + Math.random() * 1.1,
         phase: Math.random() * Math.PI * 2,
@@ -350,7 +353,7 @@ export const setupFieldCanvas = () => {
         y: anchor.y + Math.random() * 44,
         baseX: anchor.x,
         baseY: anchor.y,
-        size: 0.8 + Math.random() * 2.2,
+        size: Math.random() < 0.16 ? 2.4 + Math.random() * 2.8 : 0.7 + Math.random() * 2.1,
         speed: 0.44 + Math.random() * 0.86,
         drift: 8 + Math.random() * 22,
         phase: Math.random() * Math.PI * 2,
@@ -466,16 +469,16 @@ export const setupFieldCanvas = () => {
 
   const drawLabScene = (time) => {
     const backdrop = context.createLinearGradient(0, 0, 0, height);
-    backdrop.addColorStop(0, "rgba(12, 2, 4, 0.08)");
-    backdrop.addColorStop(0.42, "rgba(44, 4, 6, 0.12)");
-    backdrop.addColorStop(1, "rgba(120, 6, 10, 0.2)");
+    backdrop.addColorStop(0, "rgba(24, 3, 6, 0.1)");
+    backdrop.addColorStop(0.42, "rgba(64, 5, 9, 0.15)");
+    backdrop.addColorStop(1, "rgba(150, 8, 14, 0.24)");
     context.fillStyle = backdrop;
     context.fillRect(0, 0, width, height);
 
     const sideGlow = context.createLinearGradient(0, 0, width, 0);
-    sideGlow.addColorStop(0, "rgba(255, 44, 44, 0.06)");
+    sideGlow.addColorStop(0, "rgba(255, 54, 54, 0.08)");
     sideGlow.addColorStop(0.5, "rgba(255, 44, 44, 0)");
-    sideGlow.addColorStop(1, "rgba(255, 44, 44, 0.04)");
+    sideGlow.addColorStop(1, "rgba(255, 54, 54, 0.06)");
     context.fillStyle = sideGlow;
     context.fillRect(0, 0, width, height);
 
@@ -483,6 +486,53 @@ export const setupFieldCanvas = () => {
     for (let y = 0; y < height; y += 34) {
       context.fillRect(0, y, width, 1);
     }
+
+    labBubbles.forEach((bubble, index) => {
+      const float = Math.sin(time * 0.00045 * bubble.speed + bubble.phase) * bubble.drift * 12;
+      const wobble = Math.sin(time * 0.0007 + bubble.wobblePhase) * bubble.wobble;
+      bubble.x = bubble.baseX + Math.sin(time * 0.00034 + bubble.phase + index * 0.18) * float;
+      bubble.y = bubble.baseY + Math.cos(time * 0.00032 + bubble.phase) * bubble.drift * 8;
+
+      const pulse = (Math.sin(time * 0.0007 + bubble.phase) + 1) * 0.5;
+      const radius = bubble.size * (1 + wobble * 0.18);
+      const halo = context.createRadialGradient(
+        bubble.x,
+        bubble.y,
+        0,
+        bubble.x,
+        bubble.y,
+        radius * 3.8
+      );
+      halo.addColorStop(0, `rgba(255, 206, 206, ${bubble.alpha * 0.24})`);
+      halo.addColorStop(0.34, `rgba(255, 70, 76, ${bubble.glow * 0.16})`);
+      halo.addColorStop(1, "rgba(45, 0, 0, 0)");
+
+      context.fillStyle = halo;
+      context.beginPath();
+      context.arc(bubble.x, bubble.y, radius * 3.8, 0, Math.PI * 2);
+      context.fill();
+
+      context.save();
+      context.translate(bubble.x, bubble.y);
+      context.scale(bubble.stretchX, bubble.stretchY);
+      context.strokeStyle = `rgba(255, 184, 188, ${bubble.alpha * (0.62 + pulse * 0.24)})`;
+      context.lineWidth = bubble.ringWidth;
+      context.beginPath();
+      context.arc(0, 0, radius, 0, Math.PI * 2);
+      context.stroke();
+
+      context.fillStyle = `rgba(255, 236, 236, ${bubble.alpha * 0.18})`;
+      context.beginPath();
+      context.arc(
+        radius * bubble.highlightShiftX,
+        radius * bubble.highlightShiftY,
+        Math.max(0.9, radius * bubble.highlightSize),
+        0,
+        Math.PI * 2
+      );
+      context.fill();
+      context.restore();
+    });
 
     labEffervescence.forEach((spark, index) => {
       const lift = (time * 0.0012 * spark.speed + spark.phase * 22) % (height * 0.52 + 180);
@@ -517,7 +567,7 @@ export const setupFieldCanvas = () => {
         spark.x = spark.baseX;
         spark.y = spark.baseY;
         spark.speed = 0.54 + Math.random() * 1.2;
-        spark.size = 0.5 + Math.random() * 1.6;
+        spark.size = Math.random() < 0.18 ? 1.8 + Math.random() * 2.4 : 0.45 + Math.random() * 1.8;
       }
 
       const halo = context.createRadialGradient(spark.x, spark.y, 0, spark.x, spark.y, spark.size * 7);
@@ -575,7 +625,7 @@ export const setupFieldCanvas = () => {
         particle.x = anchor.x + (Math.random() - 0.5) * anchor.size * 0.9;
         particle.y = anchor.y + Math.random() * 44;
         particle.speed = 0.44 + Math.random() * 0.86;
-        particle.size = 0.8 + Math.random() * 2.2;
+        particle.size = Math.random() < 0.16 ? 2.4 + Math.random() * 2.8 : 0.7 + Math.random() * 2.1;
       }
     });
   };

@@ -67,6 +67,32 @@ const renderLabVisual = (entry) => {
   `;
 };
 
+const renderLabProjectVisual = (entry) => {
+  if (entry.visual === "truffle") {
+    return `
+      <div class="lab-project-visual lab-project-visual-image">
+        <img src="/truffle-screen-crop.png" alt="Truffle app preview" />
+      </div>
+    `;
+  }
+
+  if (entry.visual === "aware") {
+    return `
+      <div class="lab-project-visual lab-project-visual-cover lab-project-visual-aware">
+        <img src="/aware.png" alt="Aware app preview" />
+      </div>
+    `;
+  }
+
+  return `
+    <div class="lab-project-visual lab-project-visual-concept lab-project-visual-${entry.id}">
+      <span class="lab-visual-mark">${entry.type}</span>
+      <strong>${entry.name}</strong>
+      <span class="lab-project-visual-line"></span>
+    </div>
+  `;
+};
+
 const renderPageHero = ({ eyebrow, title, lead, aside, pageClass = "" }) => `
   <section class="page-hero ${pageClass}">
     <div class="page-hero-grid">
@@ -82,95 +108,102 @@ const renderPageHero = ({ eyebrow, title, lead, aside, pageClass = "" }) => `
   </section>
 `;
 
+const renderOrbitalNavigation = (doors) => {
+  const nodes = doors.map((door, index) => {
+    const positions = [
+      { x: 205, y: 168, radius: 16, orbit: "inner" },
+      { x: 383, y: 248, radius: 21, orbit: "middle" },
+      { x: 262, y: 368, radius: 18, orbit: "outer" }
+    ];
+    const position = positions[index] ?? positions[0];
+
+    return `
+      <a class="orbital-link orbital-link-${index + 1}" href="${door.href}" aria-label="Open ${door.label}">
+        <circle class="orbital-node-halo" cx="${position.x}" cy="${position.y}" r="${position.radius + 18}" />
+        <circle class="orbital-node-ring" cx="${position.x}" cy="${position.y}" r="${position.radius + 7}" />
+        <circle class="orbital-node orbital-node-${position.orbit}" cx="${position.x}" cy="${position.y}" r="${position.radius}" />
+        <text class="orbital-label" x="${position.x + 32}" y="${position.y + 5}">${door.label}</text>
+      </a>
+    `;
+  });
+
+  return `
+    <nav class="orbital-nav" aria-label="Homepage destinations">
+      <svg class="orbital-system" viewBox="0 0 560 500" role="img" aria-labelledby="orbital-title">
+        <title id="orbital-title">Orbital navigation for About Us, Lab, and Blog</title>
+        <defs>
+          <radialGradient id="orbitalCoreGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(245, 248, 255, 0.95)" />
+            <stop offset="44%" stop-color="rgba(155, 166, 188, 0.42)" />
+            <stop offset="100%" stop-color="rgba(155, 166, 188, 0)" />
+          </radialGradient>
+          <filter id="orbitalGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="orbital-grid" aria-hidden="true">
+          <path d="M88 250H514" />
+          <path d="M302 54V446" />
+        </g>
+        <g class="orbital-orbits" aria-hidden="true">
+          <ellipse class="orbital-path orbital-path-outer" cx="300" cy="252" rx="228" ry="176" />
+          <ellipse class="orbital-path orbital-path-middle" cx="300" cy="252" rx="172" ry="132" />
+          <ellipse class="orbital-path orbital-path-inner" cx="300" cy="252" rx="116" ry="88" />
+        </g>
+        <g class="orbital-core" aria-hidden="true">
+          <circle class="orbital-core-glow" cx="300" cy="252" r="46" />
+          <circle class="orbital-core-dot" cx="300" cy="252" r="4" />
+          <circle class="orbital-core-ring" cx="300" cy="252" r="24" />
+        </g>
+        <g class="orbital-nodes">
+          ${nodes.join("")}
+        </g>
+      </svg>
+    </nav>
+  `;
+};
+
 const renderHome = () => {
-  const { homeHero, homeDoors, homeSignals, homePage } = getSharedContent(
-    getCurrentLanguage()
-  );
+  const { homeHero, homeDoors, homePage } = getSharedContent(getCurrentLanguage());
   const hero = `
     <section class="hero-home">
-      <div class="hero-grid">
+      <div class="hero-grid home-hero-grid">
         <div class="hero-copy" data-reveal>
+          <p class="eyebrow">${homeHero.eyebrow}</p>
           <div class="hero-intro">
             <h1 class="hero-title">${homeHero.title}</h1>
             <p class="hero-lead">${homeHero.lead}</p>
           </div>
-
-          <div class="hero-actions">
-            <a class="button button-primary button-comet" href="/lab.html" data-comet-button><span class="button-label">${homePage.links.enterLab}</span></a>
-            <a class="button button-secondary button-comet" href="/blog.html" data-comet-button><span class="button-label">${homePage.links.readBlog}</span></a>
-          </div>
         </div>
 
-        <aside class="hero-aside" data-reveal>
-          <div class="hero-aside-copy">
-            ${homeHero.aside
-              .map(
-                (paragraph) => `
-                  <p>${paragraph}</p>
-                `
-              )
-              .join("")}
-          </div>
-          <div class="hero-markers">
-            ${homeHero.markers
-              .map(
-                (marker) => `
-                  <span>${marker}</span>
-                `
-              )
-              .join("")}
-          </div>
+        <aside class="hero-aside home-hero-aside" data-reveal>
+          ${renderOrbitalNavigation(homeDoors)}
         </aside>
-      </div>
-
-      <div class="hero-index" data-reveal>
-        ${homeDoors
-          .map(
-            (door) => `
-              <a class="hero-index-link" href="${door.href}">
-                <span>${door.label}</span>
-                <strong>${door.title}</strong>
-              </a>
-            `
-          )
-          .join("")}
       </div>
     </section>
   `;
 
   const content = `
     <section class="section-block">
-      <div class="signals-shell section-frame" data-reveal>
-        <div class="signals-intro">
-          <h2 class="section-title">${homePage.signals.title}</h2>
-        </div>
-        <div class="signals-grid">
-        ${homeSignals
-          .map(
-            (signal, index) => `
-              <article class="signal-card" data-reveal>
-                <span class="signal-index">0${index + 1}</span>
-                <p class="signal-line">${signal}</p>
-              </article>
-            `
-          )
-          .join("")}
+      <div class="split-heading" data-reveal>
+        <div>
+          <p class="section-kicker">${homePage.explore.kicker}</p>
+          <h2 class="section-title">${homePage.explore.title}</h2>
         </div>
       </div>
-    </section>
-
-    <section class="section-block">
-      <div class="door-list">
+      <div class="home-entry-grid">
         ${homeDoors
           .map(
             (door) => `
-              <a class="door-row" href="${door.href}" data-reveal>
-                <span class="door-label">${door.label}</span>
-                <div class="door-body">
-                  <h3>${door.title}</h3>
-                  <p>${door.text}</p>
-                </div>
-                <span class="door-arrow">${homePage.links.open}</span>
+              <a class="home-entry-card section-frame" href="${door.href}" data-reveal>
+                <span class="home-entry-label">${door.label}</span>
+                <strong>${door.title}</strong>
+                <p>${door.text}</p>
+                <span class="home-entry-arrow">${homePage.links.open}</span>
               </a>
             `
           )
@@ -181,44 +214,33 @@ const renderHome = () => {
     <section class="section-block">
       <div class="split-heading" data-reveal>
         <div>
-          <p class="section-kicker">${homePage.lab.kicker}</p>
-          <h2 class="section-title">${homePage.lab.title}</h2>
+          <p class="section-kicker">${homePage.preview.kicker}</p>
+          <h2 class="section-title">${homePage.preview.title}</h2>
         </div>
-        <a class="inline-link" href="/lab.html">${homePage.links.enterLab}</a>
       </div>
-      <div class="compact-list">
-        ${homePage.lab.entries
+      <div class="home-preview-grid">
+        ${homePage.preview.items
           .map(
-            (entry) => `
-              <a class="compact-row" href="/lab.html" data-reveal>
-                <span>${entry.id}</span>
-                <strong>${entry.name}</strong>
-                <p>${entry.short}</p>
-                <em>${entry.state}</em>
+            (item) => `
+              <a class="home-preview-card section-frame" href="${item.href}" data-reveal>
+                <div class="home-preview-meta">
+                  <span>${item.label}</span>
+                  <em>${item.meta}</em>
+                </div>
+                <strong>${item.name}</strong>
+                <p>${item.short}</p>
               </a>
             `
           )
           .join("")}
-      </div>
-    </section>
-
-    <section class="section-block">
-      <div class="split-heading" data-reveal>
-        <div>
-          <p class="section-kicker">${homePage.blog.kicker}</p>
-          <h2 class="section-title">${homePage.blog.title}</h2>
-        </div>
-        <a class="inline-link" href="/blog.html">${homePage.links.readBlog}</a>
-      </div>
-      <div class="feature-writing section-frame" data-reveal>
-        <p class="section-copy">${homePage.blog.body}</p>
       </div>
     </section>
 
     <section class="section-block section-end">
-      <div class="closing-note section-frame" data-reveal>
+      <div class="closing-note section-frame home-closing-note" data-reveal>
         <p class="section-kicker">${homePage.contact.kicker}</p>
         <h2 class="section-title">${homePage.contact.title}</h2>
+        <p class="section-copy">${homePage.contact.body}</p>
         <a class="button button-primary" href="/contact.html">${homePage.links.getInTouch}</a>
       </div>
     </section>
@@ -338,16 +360,15 @@ const renderAbout = () => {
 };
 
 const renderLab = () => {
-  const initialEntry = labEntries[0];
   const hero = `
     <section class="page-hero page-hero-lab">
       <div class="page-hero-grid">
         <div class="page-hero-copy" data-reveal>
           <p class="eyebrow">${studio.labName}</p>
           <div class="lab-hero-layout">
-            <h1 class="page-title">Projects that live inside the Lab.</h1>
+            <h1 class="page-title">Welcome to the Lab.</h1>
             <div class="lab-hero-story">
-              <p class="page-lead"><strong>Welcome to the Lab.</strong> This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.</p>
+              <p class="page-lead">This is where the studio's projects come to life: taking shape, evolving, and eventually reaching their final form.</p>
               <p class="page-lead page-lead-secondary">Not everything here is finished, and that is part of the point. The Lab shows the work as it lives inside the studio.</p>
             </div>
           </div>
@@ -358,59 +379,29 @@ const renderLab = () => {
 
   const content = `
     <section class="section-block lab-shell">
-      <aside class="lab-preview section-frame" data-reveal>
-        <p class="section-kicker">Current focus</p>
-        <div data-lab-preview-visual-root>
-          ${renderLabVisual(initialEntry)}
-        </div>
-        <span class="lab-preview-index" data-lab-preview="id">${initialEntry.id}</span>
-        <h2 data-lab-preview="name">${initialEntry.name}</h2>
-        <div class="lab-preview-meta">
-          <span data-lab-preview="type">${initialEntry.type}</span>
-          <span data-lab-preview="state">${initialEntry.state}</span>
-          <span data-lab-preview="year">${initialEntry.year}</span>
-        </div>
-        <p class="lab-preview-short" data-lab-preview="short">${initialEntry.short}</p>
-        <p class="lab-preview-detail" data-lab-preview="detail">${initialEntry.detail}</p>
-        <p class="lab-preview-footprint" data-lab-preview="footprint">${initialEntry.footprint}</p>
-        <div class="lab-tag-list" data-lab-preview-tags>
-          ${initialEntry.tags
-            .map(
-              (tag) => `
-                <span>${tag}</span>
-              `
-            )
-            .join("")}
-        </div>
-      </aside>
-
-      <div class="lab-list">
+      <div class="lab-project-grid">
         ${labEntries
           .map(
-            (entry, index) => `
-              <button
-                class="lab-row${index === 0 ? " is-active" : ""}"
-                type="button"
-                data-reveal
-                data-lab-item
-                data-id="${entry.id}"
-                data-name="${entry.name}"
-                data-visual="${entry.visual ?? ""}"
-                data-type="${entry.type}"
-                data-state="${entry.state}"
-                data-year="${entry.year}"
-                data-short="${entry.short}"
-                data-detail="${entry.detail}"
-                data-footprint="${entry.footprint}"
-                data-tags="${entry.tags.join(" | ")}"
-              >
-                <span class="lab-row-index">${entry.id}</span>
-                <div class="lab-row-copy">
-                  <strong>${entry.name}</strong>
-                  <p>${entry.short}</p>
+            (entry) => `
+              <article class="lab-project-card section-frame" data-reveal>
+                ${renderLabProjectVisual(entry)}
+                <div class="lab-project-content">
+                  <h2>${entry.name}</h2>
+                  <div class="lab-project-meta">
+                    <span>${entry.built ?? entry.year}</span>
+                    <span>${entry.state}</span>
+                  </div>
+                  <div class="lab-tag-list">
+                    ${entry.tags
+                      .map(
+                        (tag) => `
+                          <span>${tag}</span>
+                        `
+                      )
+                      .join("")}
+                  </div>
                 </div>
-                <em>${entry.state}</em>
-              </button>
+              </article>
             `
           )
           .join("")}
