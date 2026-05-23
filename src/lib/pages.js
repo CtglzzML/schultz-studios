@@ -9,13 +9,16 @@ import {
   defaultLanguage,
   founders,
   getSharedContent,
-  labEntries,
-  labNotes,
   practiceAreas,
   resolveContentLanguage,
-  studio
+  studio,
+  studioPrimaryEmail
 } from "../content/site.js";
 import { renderLayout } from "./layout.js";
+import websitesPreview from "../../01_websites.png";
+import interfacesPreview from "../../02_interfaces.png";
+import appsPreview from "../../03_apps.png";
+import aiPreview from "../../04_ai.png";
 
 const getCurrentLanguage = () =>
   typeof document === "undefined"
@@ -56,39 +59,61 @@ const renderLabVisual = (entry) => {
     `;
   }
 
+  if (entry.visual === "campaignshark") {
+    return `
+      <div class="lab-visual lab-visual-concept" data-lab-preview-visual="campaignshark">
+        <div class="lab-concept-card">
+          <img src="/campaignshark_logo.png" alt="Campaign Shark logo" />
+        </div>
+      </div>
+    `;
+  }
+
+  if (entry.visual === "sara-portfolio") {
+    return `
+      <div class="lab-visual lab-visual-concept" data-lab-preview-visual="sara-portfolio">
+        <div class="lab-concept-card">
+          <img src="/sara_portfolio.png" alt="Sara Portfolio preview" />
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="lab-visual lab-visual-truffle" data-lab-preview-visual="truffle">
       <div class="lab-phone">
         <div class="lab-phone-screen lab-phone-screen-truffle">
-          <img src="/truffle-screen-crop.png" alt="Truffle app preview" />
+          <img src="/portada_truffle.png" alt="Truffle app preview" />
         </div>
       </div>
     </div>
   `;
 };
 
-const renderLabProjectVisual = (entry) => {
-  if (entry.visual === "truffle") {
-    return `
-      <div class="lab-project-visual lab-project-visual-image">
-        <img src="/truffle-screen-crop.png" alt="Truffle app preview" />
-      </div>
-    `;
+const renderLabProjectVisual = (project) => {
+  if (project.visual === "truffle") {
+    return `<img class="lab-index-preview-image" src="/portada_truffle.png" alt="Truffle project preview" loading="lazy" />`;
   }
 
-  if (entry.visual === "aware") {
-    return `
-      <div class="lab-project-visual lab-project-visual-cover lab-project-visual-aware">
-        <img src="/aware.png" alt="Aware app preview" />
-      </div>
-    `;
+  if (project.visual === "campaignshark") {
+    return `<img class="lab-index-preview-image" src="/campaignshark_logo.png" alt="Campaign Shark project preview" loading="lazy" />`;
+  }
+
+  if (project.visual === "sara-portfolio") {
+    return `<img class="lab-index-preview-image" src="/sara_portfolio.png" alt="Sara Portfolio project preview" loading="lazy" />`;
+  }
+
+  if (project.visual === "aware") {
+    return `<img class="lab-index-preview-image" src="/aware.png" alt="Aware project preview" loading="lazy" />`;
+  }
+
+  if (project.visual === "casa-rural-carmen") {
+    return `<img class="lab-index-preview-image" src="/casa_rural_carmen.jpg" alt="Casa Rural Carmen project preview" loading="lazy" />`;
   }
 
   return `
-    <div class="lab-project-visual lab-project-visual-concept lab-project-visual-${entry.id}">
-      <span class="lab-visual-mark">${entry.type}</span>
-      <strong>${entry.name}</strong>
-      <span class="lab-project-visual-line"></span>
+    <div class="lab-index-preview-placeholder" aria-hidden="true">
+      <span>CRC</span>
     </div>
   `;
 };
@@ -109,76 +134,101 @@ const renderPageHero = ({ eyebrow, title, lead, aside, pageClass = "" }) => `
 `;
 
 const renderOrbitalNavigation = (doors) => {
-  const nodes = doors.map((door, index) => {
-    const positions = [
-      { x: 205, y: 168, radius: 16, orbit: "inner" },
-      { x: 383, y: 248, radius: 21, orbit: "middle" },
-      { x: 262, y: 368, radius: 18, orbit: "outer" }
-    ];
-    const position = positions[index] ?? positions[0];
+  const destinations = doors.slice(0, 3);
 
-    return `
-      <a class="orbital-link orbital-link-${index + 1}" href="${door.href}" aria-label="Open ${door.label}">
-        <circle class="orbital-node-halo" cx="${position.x}" cy="${position.y}" r="${position.radius + 18}" />
-        <circle class="orbital-node-ring" cx="${position.x}" cy="${position.y}" r="${position.radius + 7}" />
-        <circle class="orbital-node orbital-node-${position.orbit}" cx="${position.x}" cy="${position.y}" r="${position.radius}" />
-        <text class="orbital-label" x="${position.x + 32}" y="${position.y + 5}">${door.label}</text>
-      </a>
-    `;
-  });
+  const orbitMeta = [
+    { key: "about", label: "About Us" },
+    { key: "lab", label: "Lab" },
+    { key: "blog", label: "Blog" }
+  ];
 
   return `
-    <nav class="orbital-nav" aria-label="Homepage destinations">
-      <svg class="orbital-system" viewBox="0 0 560 500" role="img" aria-labelledby="orbital-title">
-        <title id="orbital-title">Orbital navigation for About Us, Lab, and Blog</title>
-        <defs>
-          <radialGradient id="orbitalCoreGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(245, 248, 255, 0.95)" />
-            <stop offset="44%" stop-color="rgba(155, 166, 188, 0.42)" />
-            <stop offset="100%" stop-color="rgba(155, 166, 188, 0)" />
-          </radialGradient>
-          <filter id="orbitalGlow" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <g class="orbital-grid" aria-hidden="true">
-          <path d="M88 250H514" />
-          <path d="M302 54V446" />
-        </g>
-        <g class="orbital-orbits" aria-hidden="true">
-          <ellipse class="orbital-path orbital-path-outer" cx="300" cy="252" rx="228" ry="176" />
-          <ellipse class="orbital-path orbital-path-middle" cx="300" cy="252" rx="172" ry="132" />
-          <ellipse class="orbital-path orbital-path-inner" cx="300" cy="252" rx="116" ry="88" />
-        </g>
-        <g class="orbital-core" aria-hidden="true">
-          <circle class="orbital-core-glow" cx="300" cy="252" r="46" />
-          <circle class="orbital-core-dot" cx="300" cy="252" r="4" />
-          <circle class="orbital-core-ring" cx="300" cy="252" r="24" />
-        </g>
-        <g class="orbital-nodes">
-          ${nodes.join("")}
-        </g>
-      </svg>
+    <nav class="orbital-nav" data-orbital-nav aria-label="Homepage destinations">
+      <div class="orbital-system">
+        <div class="orbital-core" aria-hidden="true">
+          <span class="orbital-core-planet"></span>
+          <span class="orbital-core-ring"></span>
+        </div>
+
+        ${destinations
+          .map((door, index) => {
+            const orbit = orbitMeta[index];
+
+            return `
+              <a
+                class="orbital-item orbital-item-${orbit.key}"
+                href="${door.href}"
+                data-orbit-item
+                data-orbit="${orbit.key}"
+                aria-label="Open ${orbit.label}"
+              >
+                <span class="orbital-track" aria-hidden="true"></span>
+
+                <span class="orbital-marker">
+                  <span class="orbital-satellite orbital-satellite-${orbit.key}"></span>
+                  <span class="orbital-indicator">${orbit.label}</span>
+                </span>
+              </a>
+            `;
+          })
+          .join("")}
+      </div>
     </nav>
   `;
 };
 
 const renderHome = () => {
   const { homeHero, homeDoors, homePage } = getSharedContent(getCurrentLanguage());
+  const aiTools = [
+    "Figma",
+    "React",
+    "Vite",
+    "Supabase",
+    "Vercel",
+    "GitHub",
+    "Notion",
+    "OpenAI",
+    "Claude",
+    "Cursor",
+    "Codex",
+    "Python"
+  ];
+  const buildServices = [
+    {
+      number: "01",
+      title: "Websites",
+      description: "Editorial, clean, and responsive websites built around identity and clarity.",
+      image: websitesPreview
+    },
+    {
+      number: "02",
+      title: "Interfaces",
+      description: "UX/UI systems where every screen has a reason to exist.",
+      image: interfacesPreview
+    },
+    {
+      number: "03",
+      title: "Apps",
+      description: "Functional digital products built around user flows, data, and real use cases.",
+      image: appsPreview
+    },
+    {
+      number: "04",
+      title: "AI Systems",
+      description:
+        "We integrate AI into your digital ecosystem, helping you build AI-powered systems that make your product sharper, faster, and harder to ignore.",
+      image: aiPreview
+    }
+  ];
   const hero = `
     <section class="hero-home">
       <div class="hero-grid home-hero-grid">
         <div class="hero-copy" data-reveal>
-          <p class="eyebrow">${homeHero.eyebrow}</p>
-          <div class="hero-intro">
-            <h1 class="hero-title">${homeHero.title}</h1>
-            <p class="hero-lead">${homeHero.lead}</p>
-          </div>
-        </div>
+  <div class="hero-intro">
+    <h1 class="hero-title">${homeHero.title}</h1>
+    <p class="hero-lead">${homeHero.lead}</p>
+  </div>
+</div>
 
         <aside class="hero-aside home-hero-aside" data-reveal>
           ${renderOrbitalNavigation(homeDoors)}
@@ -188,60 +238,81 @@ const renderHome = () => {
   `;
 
   const content = `
-    <section class="section-block">
-      <div class="split-heading" data-reveal>
-        <div>
-          <p class="section-kicker">${homePage.explore.kicker}</p>
-          <h2 class="section-title">${homePage.explore.title}</h2>
+    <section class="section-block home-build-section">
+      <div class="home-build-layout">
+        <div class="home-build-copy" data-reveal>
+          <h2 class="home-build-title">Digital products with structure, atmosphere, and purpose.</h2>
+          <p class="home-build-intro">
+            We design and build websites, interfaces, apps, and AI-assisted systems for ideas that need more than just a good-looking screen.
+          </p>
         </div>
-      </div>
-      <div class="home-entry-grid">
-        ${homeDoors
+        <div class="home-build-list">
+          ${buildServices
           .map(
-            (door) => `
-              <a class="home-entry-card section-frame" href="${door.href}" data-reveal>
-                <span class="home-entry-label">${door.label}</span>
-                <strong>${door.title}</strong>
-                <p>${door.text}</p>
-                <span class="home-entry-arrow">${homePage.links.open}</span>
-              </a>
+            (service) => `
+              <article class="home-build-row" data-reveal>
+                <span class="home-build-visual home-build-visual-${service.title.toLowerCase().replace(/\s+/g, "-")}">
+                  <img class="home-build-visual-image" src="${service.image}" alt="" loading="lazy" />
+                </span>
+                <div class="home-build-service">
+                  <p class="home-build-label">${service.title}</p>
+                  <p class="home-build-description">${service.description}</p>
+                </div>
+              </article>
             `
           )
           .join("")}
+        </div>
       </div>
     </section>
 
-    <section class="section-block">
-      <div class="split-heading" data-reveal>
-        <div>
-          <p class="section-kicker">${homePage.preview.kicker}</p>
-          <h2 class="section-title">${homePage.preview.title}</h2>
+    <section class="section-block home-diagram-section" data-reveal>
+      <div class="home-diagram-layout">
+        <div class="home-diagram-visual">
+          <img class="home-diagram-image" src="/diagram 1.png" alt="System diagram" loading="lazy" />
+        </div>
+        <div class="home-diagram-copy">
+          <h2 class="section-title">We don’t just make cool screens</h2>
+          <p class="section-copy">
+         We start with the big picture, then break each idea into the parts it needs.
+          </p>
         </div>
       </div>
-      <div class="home-preview-grid">
-        ${homePage.preview.items
-          .map(
-            (item) => `
-              <a class="home-preview-card section-frame" href="${item.href}" data-reveal>
-                <div class="home-preview-meta">
-                  <span>${item.label}</span>
-                  <em>${item.meta}</em>
-                </div>
-                <strong>${item.name}</strong>
-                <p>${item.short}</p>
-              </a>
-            `
-          )
-          .join("")}
+    </section>
+
+    <section class="section-block home-ai-section">
+      <div class="home-ai-shell">
+        <div class="home-ai-copy" data-reveal>
+          <h2 class="home-ai-title">Built with modern tools.
+Shaped by human judgment.</h2>
+          <p class="home-ai-subtitle">
+            We use AI to explore deeper, automate smarter, and build sharper — while keeping every decision guided by design, context, and intent.
+          </p>
+        </div>
+        <div class="home-ai-marquee" data-reveal aria-label="Tools we use">
+          <div class="home-ai-marquee-track">
+            ${[...aiTools, ...aiTools]
+              .map(
+                (tool) => `
+                  <span class="home-ai-tool" aria-hidden="true">${tool}</span>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section-block section-end">
       <div class="closing-note section-frame home-closing-note" data-reveal>
-        <p class="section-kicker">${homePage.contact.kicker}</p>
-        <h2 class="section-title">${homePage.contact.title}</h2>
-        <p class="section-copy">${homePage.contact.body}</p>
-        <a class="button button-primary" href="/contact.html">${homePage.links.getInTouch}</a>
+        <p class="home-closing-kicker">Stay in the Loop</p>
+        <h2 class="home-closing-title">Tell us what you are thinking, building, or circling around.</h2>
+        <div class="home-closing-actions">
+          <a
+            class="home-closing-cta"
+            href="mailto:${studioPrimaryEmail}?subject=${encodeURIComponent("Get in touch from Schultz' Studios")}"
+          >Get in touch by email</a>
+        </div>
       </div>
     </section>
   `;
@@ -254,8 +325,8 @@ const renderAbout = () => {
     <section class="page-hero page-hero-about">
       <div class="page-hero-grid">
         <div class="page-hero-copy" data-reveal>
-          <p class="eyebrow">About Us</p>
-          <h1 class="page-title">Welcome to our small digital home.</h1>
+          <p class="eyebrow"></p>
+          <h1 class="page-title">Our small digital home.</h1>
         </div>
         <aside class="page-aside" data-reveal>
           <p>
@@ -276,8 +347,8 @@ const renderAbout = () => {
     <section class="section-block">
       <div class="split-heading" data-reveal>
         <div>
-          <p class="section-kicker">Inside the studio</p>
-          <h2 class="section-title">Two backgrounds, one shared standard.</h2>
+          <p class="section-kicker"></p>
+          
         </div>
       </div>
       <div class="founders-grid">
@@ -360,6 +431,76 @@ const renderAbout = () => {
 };
 
 const renderLab = () => {
+  const labProjectLinks = {
+    truffle:
+      "https://www.figma.com/proto/yJAtwxBoCtbmeATO4cdz1J/UXUI_casestudy_truffle?node-id=1-510&t=NFBFjCiaaVjxqWLu-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A510",
+    campaignShark: "https://www.campaignshark.com/",
+    saraPortfolio: "https://www.saraheredadesign.com/"
+  };
+
+  const pipelineProjects = [
+    {
+      id: "01",
+      year: "2026",
+      status: "FINISHED",
+      name: "Truffle",
+      type: "Pet care mobile app",
+      description:
+        "A small mobile product concept built around daily pet care, routines, and simple ownership flows.",
+      tags: ["Mobile product", "Pet care", "Daily use"],
+      visual: "truffle",
+      href: labProjectLinks.truffle
+    },
+    {
+      id: "02",
+      year: "2026",
+      status: "IN PROGRESS",
+      name: "Campaign Shark",
+      type: "AI Ad Performance Prediction Tool",
+      description:
+        "An AI-assisted system for comparing ad campaigns, ranking creative options, and helping teams make sharper decisions before launch.",
+      tags: ["AI SaaS", "Ad comparison", "Dashboard"],
+      visual: "campaignshark",
+      href: labProjectLinks.campaignShark
+    },
+    {
+      id: "03",
+      year: "2026",
+      status: "FINISHED",
+      name: "Sara's Portfolio",
+      type: "UX/UI portfolio website",
+      description:
+        "A personal portfolio space designed to present selected work, process, and visual identity with clarity.",
+      tags: ["Portfolio", "UX/UI", "Web presence"],
+      visual: "sara-portfolio",
+      href: labProjectLinks.saraPortfolio
+    },
+    {
+      id: "04",
+      year: "2026",
+      status: "IN PROGRESS",
+      name: "Aware",
+      type: "Personal expense tracker",
+      description:
+        "A simple expense-tracking app for events, trips, and everyday moments where users want to know what they really spent.",
+      tags: ["Web product", "Expense tracking", "Events"],
+      visual: "aware",
+      isInDevelopment: true
+    },
+    {
+      id: "05",
+      year: "2026",
+      status: "IN IDEATION",
+      name: "Casa Rural Carmen",
+      type: "Hospitality website concept",
+      description:
+        "A website concept for a rural house, focused on atmosphere, trust, and clear booking-oriented storytelling.",
+      tags: ["Hospitality", "Website", "Early concept"],
+      visual: "casa-rural-carmen",
+      isInDevelopment: true
+    }
+  ];
+
   const hero = `
     <section class="page-hero page-hero-lab">
       <div class="page-hero-grid">
@@ -379,46 +520,44 @@ const renderLab = () => {
 
   const content = `
     <section class="section-block lab-shell">
-      <div class="lab-project-grid">
-        ${labEntries
-          .map(
-            (entry) => `
-              <article class="lab-project-card section-frame" data-reveal>
-                ${renderLabProjectVisual(entry)}
-                <div class="lab-project-content">
-                  <h2>${entry.name}</h2>
-                  <div class="lab-project-meta">
-                    <span>${entry.built ?? entry.year}</span>
-                    <span>${entry.state}</span>
-                  </div>
-                  <div class="lab-tag-list">
-                    ${entry.tags
-                      .map(
-                        (tag) => `
-                          <span>${tag}</span>
-                        `
-                      )
-                      .join("")}
-                  </div>
-                </div>
-              </article>
-            `
-          )
-          .join("")}
-      </div>
-    </section>
-
-    <section class="section-block">
-      <div class="lab-rules-card">
-        <div class="section-heading" data-reveal>
-          <p class="section-kicker">Lab rules</p>
-          <h2 class="section-title">A living archive of products we care about building well.</h2>
-        </div>
-        <div class="signal-strip">
-          ${labNotes
+      <div class="lab-index">
+        <div class="lab-index-list">
+          ${pipelineProjects
             .map(
-              (note) => `
-                <p class="signal-line" data-reveal>${note}</p>
+              (project) => `
+                <article
+                  class="lab-index-row ${project.href ? "is-clickable" : ""} ${project.isInDevelopment ? "is-in-development" : ""}"
+                  data-reveal
+                  ${project.href ? `data-project-link="${project.href}"` : ""}
+                  ${project.isInDevelopment ? 'data-project-development="true"' : ""}
+                  tabindex="0"
+                  role="button"
+                >
+                  <div class="lab-index-main">
+                    <span class="lab-index-number">${project.id}</span>
+                    <div class="lab-index-copy">
+                      <h3>${project.name}</h3>
+                      <p class="lab-index-type">${project.type}</p>
+                      <p class="lab-index-description">${project.description}</p>
+                      <div class="lab-index-meta">
+                        <span>${project.year}</span>
+                        <span>${project.status}</span>
+                      </div>
+                      <div class="lab-index-tags">
+                        ${project.tags
+                          .map(
+                            (tag) => `
+                              <span>${tag}</span>
+                            `
+                          )
+                          .join("")}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="lab-index-preview">
+                    ${renderLabProjectVisual(project)}
+                  </div>
+                </article>
               `
             )
             .join("")}
@@ -482,13 +621,13 @@ const renderContact = () => {
             )
             .join("")}
         </div>
-        <a class="button button-primary contact-button" href="mailto:${studio.email}?subject=${encodeURIComponent(
+        <a class="button button-primary contact-button" href="mailto:${studioPrimaryEmail}?subject=${encodeURIComponent(
           "Schultz' Studios"
         )}">
           Open email draft
         </a>
         <p class="form-note">
-          Or write directly to <a href="mailto:${studio.email}">${studio.email}</a>.
+          
         </p>
       </div>
     </section>

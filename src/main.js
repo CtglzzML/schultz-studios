@@ -4,8 +4,9 @@ import {
   languageStorageKey,
   resolveContentLanguage
 } from "./content/site.js";
-import { setupFieldCanvas } from "./lib/field.js";
+import { setupFieldCanvas, setupLabHoverCanvas } from "./lib/field.js";
 import { articleDefinitions, pageDefinitions } from "./lib/pages.js";
+import { initOrbitalNavigation } from "./lib/orbital.js";
 
 const app = document.querySelector("#app");
 const pageId = document.body.dataset.page ?? "home";
@@ -219,7 +220,7 @@ const setupLabArchive = () => {
       <div class="lab-visual lab-visual-truffle" data-lab-preview-visual="truffle">
         <div class="lab-phone">
           <div class="lab-phone-screen lab-phone-screen-truffle">
-            <img src="/truffle-screen-crop.png" alt="Truffle app preview" />
+            <img src="/portada_truffle.png" alt="Truffle app preview" />
           </div>
         </div>
       </div>
@@ -255,6 +256,74 @@ const setupLabArchive = () => {
     item.addEventListener("mouseenter", () => applyEntry(item));
     item.addEventListener("focus", () => applyEntry(item));
     item.addEventListener("click", () => applyEntry(item));
+  });
+};
+
+const setupLabProjectLinks = () => {
+  const rows = Array.from(document.querySelectorAll(".lab-index-row"));
+
+  if (!rows.length) {
+    return;
+  }
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "lab-dev-tooltip";
+  tooltip.textContent =
+    "This project is still in development in the lab. Please come back later.";
+  document.body.appendChild(tooltip);
+
+  const hideTooltip = () => {
+    tooltip.classList.remove("is-visible");
+  };
+
+  const showTooltipAt = (clientX, clientY) => {
+    tooltip.style.left = `${clientX + 14}px`;
+    tooltip.style.top = `${clientY + 14}px`;
+    tooltip.classList.add("is-visible");
+  };
+
+  const navigateToProject = (row) => {
+    const url = row.dataset.projectLink;
+    if (!url) {
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  rows.forEach((row) => {
+    const isInDevelopment = row.dataset.projectDevelopment === "true";
+
+    if (isInDevelopment) {
+      row.addEventListener("mousemove", (event) => {
+        showTooltipAt(event.clientX, event.clientY);
+      });
+      row.addEventListener("mouseenter", (event) => {
+        showTooltipAt(event.clientX, event.clientY);
+      });
+      row.addEventListener("mouseleave", hideTooltip);
+      row.addEventListener("blur", hideTooltip);
+      row.addEventListener("click", (event) => {
+        event.preventDefault();
+        showTooltipAt(event.clientX, event.clientY);
+      });
+      row.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          tooltip.style.left = "1rem";
+          tooltip.style.top = "1rem";
+          tooltip.classList.add("is-visible");
+        }
+      });
+      return;
+    }
+
+    row.addEventListener("click", () => navigateToProject(row));
+    row.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        navigateToProject(row);
+      }
+    });
   });
 };
 
@@ -354,12 +423,15 @@ const renderApp = () => {
   }
 
   setupFieldCanvas();
+  setupLabHoverCanvas();
   setupNav();
   setupLanguageSwitcher(renderApp);
   setupReveals();
   setupContactForm();
   setupLabArchive();
+  setupLabProjectLinks();
   setupCometButtons();
+  initOrbitalNavigation();
 };
 
 renderApp();

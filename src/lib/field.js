@@ -6,6 +6,7 @@ const distanceSquared = (ax, ay, bx, by) => {
 };
 
 let activeFieldCleanup = null;
+let activeLabHoverCleanup = null;
 
 const roundedRectPath = (context, x, y, width, height, radius) => {
   const r = Math.min(radius, width * 0.5, height * 0.5);
@@ -260,7 +261,7 @@ export const setupFieldCanvas = () => {
   let isCleanedUp = false;
 
   const createLabScene = () => {
-    const bubbleCount = width < 720 ? 18 : width < 1080 ? 26 : 38;
+    const bubbleCount = Math.max(1, Math.round((width < 720 ? 18 : width < 1080 ? 26 : 38) * 0.7));
     const effervescenceCount = width < 720 ? 44 : width < 1080 ? 64 : 88;
     const particleCount = width < 720 ? 78 : width < 1080 ? 110 : 150;
     const rippleCount = 0;
@@ -757,6 +758,337 @@ export const setupFieldCanvas = () => {
   window.addEventListener("resize", resize);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerleave", onPointerLeave);
+  window.addEventListener("beforeunload", cleanup);
+
+  if (reducedMotion) {
+    draw(0);
+    return;
+  }
+
+  rafId = window.requestAnimationFrame(animate);
+};
+
+export const setupLabHoverCanvas = () => {
+  if (typeof activeLabHoverCleanup === "function") {
+    activeLabHoverCleanup();
+    activeLabHoverCleanup = null;
+  }
+
+  const card = document.querySelector(".home-entry-card-lab");
+  const canvas = card?.querySelector("[data-home-lab-hover-canvas]");
+
+  if (!(card instanceof HTMLElement) || !(canvas instanceof HTMLCanvasElement)) {
+    return;
+  }
+
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    return;
+  }
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pointer = {
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    active: false
+  };
+
+  let labBubbles = [];
+  let labEffervescence = [];
+  let labParticles = [];
+  let rafId = 0;
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let isCleanedUp = false;
+
+  const createLabScene = () => {
+    const bubbleCount = width < 720 ? 18 : width < 1080 ? 26 : 38;
+    const effervescenceCount = width < 720 ? 44 : width < 1080 ? 64 : 88;
+    const particleCount = width < 720 ? 78 : width < 1080 ? 110 : 150;
+    const bubbleMinDistance = width < 720 ? 42 : width < 1080 ? 56 : 68;
+    const bubbleMinDistanceSquared = bubbleMinDistance * bubbleMinDistance;
+    const bubbleBases = [];
+    let attempts = 0;
+
+    while (bubbleBases.length < bubbleCount && attempts < bubbleCount * 18) {
+      attempts += 1;
+
+      const baseX = width * (0.05 + Math.random() * 0.9);
+      const baseY = height * (0.44 + Math.random() * 0.44);
+
+      let valid = true;
+      for (let index = 0; index < bubbleBases.length; index += 1) {
+        const bubble = bubbleBases[index];
+        if (distanceSquared(baseX, baseY, bubble.baseX, bubble.baseY) < bubbleMinDistanceSquared) {
+          valid = false;
+          break;
+        }
+      }
+
+      if (!valid) {
+        continue;
+      }
+
+      const isLargeBubble = Math.random() < 0.28;
+      const size = isLargeBubble ? 9 + Math.random() * 20 : 2.8 + Math.random() * 8.5;
+
+      bubbleBases.push({
+        baseX,
+        baseY,
+        x: baseX,
+        y: baseY,
+        size,
+        speed: 0.22 + Math.random() * 0.58,
+        drift: 0.2 + Math.random() * 1.1,
+        phase: Math.random() * Math.PI * 2,
+        alpha: isLargeBubble ? 0.08 + Math.random() * 0.1 : 0.12 + Math.random() * 0.2,
+        glow: isLargeBubble ? 0.14 + Math.random() * 0.2 : 0.16 + Math.random() * 0.28,
+        stretchX: 0.78 + Math.random() * 0.64,
+        stretchY: 0.78 + Math.random() * 0.62,
+        ringWidth: 0.42 + Math.random() * 0.42,
+        highlightShiftX: -0.62 + Math.random() * 1.24,
+        highlightShiftY: -0.62 + Math.random() * 1.24,
+        highlightSize: 0.06 + Math.random() * 0.2,
+        tint: 0.05 + Math.random() * 0.2,
+        wobble: 0.14 + Math.random() * 0.36,
+        wobblePhase: Math.random() * Math.PI * 2
+      });
+    }
+
+    labBubbles = bubbleBases;
+
+    labEffervescence = Array.from({ length: effervescenceCount }, (_, index) => {
+      const anchor = labBubbles[index % Math.max(1, labBubbles.length)] || {
+        baseX: width * Math.random(),
+        baseY: height * (0.48 + Math.random() * 0.34),
+        size: 8
+      };
+
+      return {
+        baseX: anchor.baseX + (Math.random() - 0.5) * 40,
+        baseY: anchor.baseY + (Math.random() - 0.5) * 26,
+        x: anchor.baseX,
+        y: anchor.baseY,
+        size: Math.random() < 0.18 ? 1.8 + Math.random() * 2.4 : 0.45 + Math.random() * 1.8,
+        speed: 0.54 + Math.random() * 1.2,
+        drift: 0.32 + Math.random() * 1.1,
+        phase: Math.random() * Math.PI * 2,
+        alpha: 0.22 + Math.random() * 0.34,
+        glow: 0.18 + Math.random() * 0.3,
+        tint: 0.1 + Math.random() * 0.18
+      };
+    });
+
+    labParticles = Array.from({ length: particleCount }, (_, index) => {
+      const anchor = labBubbles[index % labBubbles.length] || {
+        x: width * 0.5,
+        y: height * 0.82,
+        size: 14
+      };
+
+      return {
+        x: anchor.x + (Math.random() - 0.5) * anchor.size * 0.9,
+        y: anchor.y + Math.random() * 44,
+        baseX: anchor.x,
+        baseY: anchor.y,
+        size: Math.random() < 0.16 ? 2.4 + Math.random() * 2.8 : 0.7 + Math.random() * 2.1,
+        speed: 0.44 + Math.random() * 0.86,
+        drift: 8 + Math.random() * 22,
+        phase: Math.random() * Math.PI * 2,
+        alpha: 0.14 + Math.random() * 0.24
+      };
+    });
+  };
+
+  const resize = () => {
+    const rect = card.getBoundingClientRect();
+    dpr = clamp(window.devicePixelRatio || 1, 1, 2);
+    width = Math.max(1, rect.width);
+    height = Math.max(1, rect.height);
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    createLabScene();
+    pointer.x = width * 0.5;
+    pointer.y = height * 0.46;
+    pointer.targetX = pointer.x;
+    pointer.targetY = pointer.y;
+
+    if (reducedMotion) {
+      draw(0);
+    }
+  };
+
+  const drawLabScene = (time) => {
+    const backdrop = context.createLinearGradient(0, 0, 0, height);
+    backdrop.addColorStop(0, "rgba(24, 3, 6, 0.1)");
+    backdrop.addColorStop(0.42, "rgba(64, 5, 9, 0.15)");
+    backdrop.addColorStop(1, "rgba(150, 8, 14, 0.24)");
+    context.fillStyle = backdrop;
+    context.fillRect(0, 0, width, height);
+
+    const sideGlow = context.createLinearGradient(0, 0, width, 0);
+    sideGlow.addColorStop(0, "rgba(255, 54, 54, 0.08)");
+    sideGlow.addColorStop(0.5, "rgba(255, 44, 44, 0)");
+    sideGlow.addColorStop(1, "rgba(255, 54, 54, 0.06)");
+    context.fillStyle = sideGlow;
+    context.fillRect(0, 0, width, height);
+
+    context.fillStyle = "rgba(255, 76, 76, 0.03)";
+    for (let y = 0; y < height; y += 34) {
+      context.fillRect(0, y, width, 1);
+    }
+
+    labEffervescence.forEach((spark, index) => {
+      const lift = (time * 0.0012 * spark.speed + spark.phase * 22) % (height * 0.52 + 180);
+      spark.y = spark.baseY - lift;
+      spark.x = spark.baseX + Math.sin(time * 0.0009 * spark.drift + spark.phase + index * 0.12) * 14;
+
+      if (pointer.active) {
+        const dx = spark.x - pointer.x;
+        const dy = spark.y - pointer.y;
+        const distance = Math.hypot(dx, dy) || 1;
+        const influence = Math.max(0, 1 - distance / 150);
+        spark.x += (dx / distance) * influence * 7;
+        spark.y += (dy / distance) * influence * 4;
+        spark.glow = 0.22 + influence * 0.38;
+        spark.alpha = 0.18 + influence * 0.32;
+      } else {
+        spark.glow += (0.2 - spark.glow) * 0.08;
+        spark.alpha += (0.24 - spark.alpha) * 0.05;
+      }
+
+      if (spark.y < -20) {
+        const anchor = labBubbles[index % Math.max(1, labBubbles.length)] || {
+          baseX: width * Math.random(),
+          baseY: height * 0.7,
+          size: 8
+        };
+
+        spark.baseX = anchor.baseX + (Math.random() - 0.5) * 40;
+        spark.baseY = anchor.baseY + (Math.random() - 0.5) * 24;
+        spark.x = spark.baseX;
+        spark.y = spark.baseY;
+        spark.speed = 0.54 + Math.random() * 1.2;
+        spark.size = Math.random() < 0.18 ? 1.8 + Math.random() * 2.4 : 0.45 + Math.random() * 1.8;
+      }
+
+      const halo = context.createRadialGradient(spark.x, spark.y, 0, spark.x, spark.y, spark.size * 7);
+      halo.addColorStop(0, `rgba(255, 198, 198, ${spark.alpha * 0.62})`);
+      halo.addColorStop(0.28, `rgba(255, 84, 84, ${spark.glow * 0.42})`);
+      halo.addColorStop(1, "rgba(30, 0, 0, 0)");
+      context.fillStyle = halo;
+      context.beginPath();
+      context.arc(spark.x, spark.y, spark.size * 7, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = `rgba(255, 248, 248, ${spark.alpha * (0.22 + spark.tint)})`;
+      context.beginPath();
+      context.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    labParticles.forEach((particle, index) => {
+      particle.y -= particle.speed;
+      particle.x = particle.baseX + Math.sin(time * 0.0009 + particle.phase + index * 0.12) * particle.drift;
+
+      if (pointer.active) {
+        const dx = particle.x - pointer.x;
+        const dy = particle.y - pointer.y;
+        const distance = Math.hypot(dx, dy) || 1;
+        const influence = Math.max(0, 1 - distance / 120);
+        particle.x += (dx / distance) * influence * 1.8;
+        particle.y += (dy / distance) * influence * 0.5;
+        particle.alpha = 0.16 + influence * 0.26;
+      } else {
+        particle.alpha += (0.18 - particle.alpha) * 0.08;
+      }
+
+      context.fillStyle = `rgba(255, 192, 192, ${particle.alpha})`;
+      context.beginPath();
+      context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      context.fill();
+
+      context.fillStyle = `rgba(255, 60, 60, ${particle.alpha * 0.3})`;
+      context.beginPath();
+      context.arc(particle.x, particle.y, particle.size * 2.4, 0, Math.PI * 2);
+      context.fill();
+
+      if (particle.y < -20) {
+        const anchor = labBubbles[index % labBubbles.length] || {
+          x: width * 0.5,
+          y: height * 0.82,
+          size: 14
+        };
+
+        particle.baseX = anchor.x;
+        particle.baseY = anchor.y;
+        particle.x = anchor.x + (Math.random() - 0.5) * anchor.size * 0.9;
+        particle.y = anchor.y + Math.random() * 44;
+        particle.speed = 0.44 + Math.random() * 0.86;
+        particle.size = Math.random() < 0.16 ? 2.4 + Math.random() * 2.8 : 0.7 + Math.random() * 2.1;
+      }
+    });
+  };
+
+  const draw = (time) => {
+    context.clearRect(0, 0, width, height);
+    pointer.x += (pointer.targetX - pointer.x) * 0.14;
+    pointer.y += (pointer.targetY - pointer.y) * 0.14;
+    drawLabScene(time);
+  };
+
+  const animate = (time) => {
+    draw(time);
+    rafId = window.requestAnimationFrame(animate);
+  };
+
+  const onPointerMove = (event) => {
+    const rect = card.getBoundingClientRect();
+    pointer.targetX = event.clientX - rect.left;
+    pointer.targetY = event.clientY - rect.top;
+    pointer.active = true;
+  };
+
+  const onPointerLeave = () => {
+    pointer.active = false;
+    pointer.targetX = width * 0.5;
+    pointer.targetY = height * 0.46;
+  };
+
+  const cleanup = () => {
+    if (isCleanedUp) {
+      return;
+    }
+
+    isCleanedUp = true;
+    window.cancelAnimationFrame(rafId);
+    window.removeEventListener("resize", resize);
+    card.removeEventListener("pointermove", onPointerMove);
+    card.removeEventListener("pointerleave", onPointerLeave);
+    card.removeEventListener("pointerenter", onPointerMove);
+    window.removeEventListener("beforeunload", cleanup);
+
+    if (activeLabHoverCleanup === cleanup) {
+      activeLabHoverCleanup = null;
+    }
+  };
+
+  activeLabHoverCleanup = cleanup;
+  resize();
+
+  window.addEventListener("resize", resize);
+  card.addEventListener("pointermove", onPointerMove, { passive: true });
+  card.addEventListener("pointerenter", onPointerMove, { passive: true });
+  card.addEventListener("pointerleave", onPointerLeave);
   window.addEventListener("beforeunload", cleanup);
 
   if (reducedMotion) {

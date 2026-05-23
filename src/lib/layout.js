@@ -79,11 +79,13 @@ export const renderLayout = ({
       </main>
 
       <footer class="site-footer">
-        <div class="footer-line">
+        <div class="footer-line footer-main">
           <span>${studio.name}</span>
+          <span aria-hidden="true">•</span>
           <span>${studio.labName}</span>
-          <span>${studioMeta.location}</span>
-          <a href="mailto:${studio.email}">${studio.email}</a>
+        </div>
+        <div class="footer-line footer-byline">
+          <span>By Sara Hereda & Carlos Torres</span>
         </div>
         <div class="footer-line footer-muted">
           <span>${studioMeta.shortDescription}</span>

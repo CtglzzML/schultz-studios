@@ -63,8 +63,8 @@ export const localizedSharedContent = {
     ],
     homeHero: {
       eyebrow: "Schultz' Studios",
-      title: "Welcome to<br>our <em>space</em>",
-      lead: "Because only well-made things stay in orbit",
+      title: "Welcome to<br>our <em>space .</em>",
+      lead: "We convert ideas into digital products, from the first concept to the final launch. Explore the universe.",
       aside: "Built in Norway. Made with care, in a quieter rhythm.",
       markers: ["Websites", "Products", "Interfaces", "Human-made"]
     },
@@ -95,12 +95,12 @@ export const localizedSharedContent = {
     ],
     homePage: {
       links: {
-        open: "Open",
+        open: "",
         getInTouch: "Get in touch"
       },
       explore: {
         kicker: "Explore",
-        title: "Three places to start."
+        title: ""
       },
       preview: {
         kicker: "From the studio",
@@ -250,9 +250,11 @@ export const studio = {
   description: getSharedSection("studioMeta").description,
   shortDescription: getSharedSection("studioMeta").shortDescription,
   location: getSharedSection("studioMeta").location,
-  email: "sbhereda@gmail.com",
+  email: "hello@saraheredadesign.com | carlostorres.code@gmail.com",
   availability: getSharedSection("studioMeta").availability
 };
+
+export const studioPrimaryEmail = "hello@saraheredadesign.com";
 
 export const navigation = getSharedSection("navigation");
 
@@ -298,6 +300,7 @@ export const labEntries = [
   {
     id: "03",
     name: "Sara' s Portfolio",
+    visual: "sara-portfolio",
     type: "Portfolio website",
     state: "Early build",
     year: "2026",
@@ -322,6 +325,21 @@ export const labEntries = [
       "A future website concept for a family rural house, imagined as a calm and welcoming digital presence.",
     tags: ["Hospitality", "Early concept", "Website"],
     footprint: "Place / welcome / digital presence"
+  },
+  {
+    id: "05",
+    name: "Campaign Shark",
+    visual: "campaignshark",
+    type: "SaaS tool",
+    state: "IN PROGRESS",
+    year: "2026",
+    built: "2026",
+    short:
+      "A campaign intelligence tool that uses AI to compare ad concepts, score creative direction, and support better marketing decisions before launch.",
+    detail:
+      "A campaign intelligence tool that uses AI to compare ad concepts, score creative direction, and support better marketing decisions before launch.",
+    tags: ["AI product", "Campaign analysis", "SaaS tool"],
+    footprint: "Creative scoring / concept comparison / launch decisions"
   }
 ];
 
